@@ -46,11 +46,11 @@
   }
 
   .glass {
-    @apply bg-white/40 dark:bg-black/40 backdrop-blur-2xl border border-white/20 dark:border-white/5 shadow-2xl;
+    @apply bg-white/40 dark:bg-white/[0.03] backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl;
   }
   
   .glass-card {
-    @apply bg-white/60 dark:bg-mtm-dark-surface/60 backdrop-blur-xl border border-gray-200/40 dark:border-white/5 shadow-xl transition-all duration-500;
+    @apply bg-white/60 dark:bg-white/[0.02] backdrop-blur-xl border border-gray-200/40 dark:border-white/[0.08] shadow-xl transition-all duration-500;
   }
 
   .btn-premium {
