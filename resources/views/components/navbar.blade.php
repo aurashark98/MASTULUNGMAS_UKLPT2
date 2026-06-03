@@ -30,7 +30,7 @@
             @foreach($navLinks as $link)
                 <a href="{{ $link['url'] }}" 
                    class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 relative group overflow-hidden"
-                   :class="activeNav === '{{ $link['id'] }}' ? 'text-mtm-red dark:text-white' : 'text-black dark:text-white hover:text-mtm-red'">
+                   :class="activeNav === '{{ $link['id'] }}' ? 'text-mtm-red dark:text-mtm-red-light' : 'text-black dark:text-white hover:text-mtm-red'">
                     <span class="relative z-10">{{ $link['name'] }}</span>
                     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-mtm-red rounded-full transition-all duration-300 opacity-0"
                          :class="activeNav === '{{ $link['id'] }}' ? 'opacity-100' : 'group-hover:opacity-50'"></div>
