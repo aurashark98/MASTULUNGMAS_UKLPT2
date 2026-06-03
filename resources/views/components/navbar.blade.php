@@ -7,7 +7,7 @@
      class="fixed top-8 left-1/2 -translate-x-1/2 z-[90] w-[95%] max-w-5xl transition-all duration-700 ease-out"
      :class="isScrolled ? 'top-4 w-[90%]' : 'top-8 w-[95%]'">
     
-    <div class="glass rounded-full px-4 py-2.5 md:px-6 md:py-3 flex items-center justify-between shadow-2xl border border-white/20 dark:border-white/5">
+    <div class="glass rounded-full px-4 py-2.5 md:px-6 md:py-3 flex items-center justify-between shadow-2xl border border-black/20 dark:border-white/20">
         <!-- Logo Section -->
         <a href="{{ route('home') }}" class="flex items-center gap-3 pl-2 group">
             <div class="w-10 h-10 bg-gradient-premium rounded-full flex items-center justify-center shadow-lg group-hover:rotate-[360deg] transition-transform duration-700">
