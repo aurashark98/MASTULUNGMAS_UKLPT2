@@ -1,7 +1,8 @@
-import { motion } from "motion/react";
+import React from "react";
+import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
@@ -26,14 +27,14 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         className="fixed top-4 left-1/2 -translate-x-1/2 z-40 hidden md:block"
       >
-        <div className="bg-white/80 dark:bg-[#1E1E1E]/80 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-full px-6 py-3 shadow-lg shadow-black/5">
+        <div className="bg-white dark:bg-[#1E1E1E] border border-gray-200 dark:border-gray-700 rounded-full px-6 py-3 shadow-xl shadow-black/5">
           <div className="flex items-center gap-8">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 pr-4 border-r border-gray-200 dark:border-gray-700">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-sm">M</span>
               </div>
-              <span className="font-bold text-[#D32F2F] dark:text-[#EF5350] font-poppins">MTM</span>
+              <span className="font-bold text-gray-900 dark:text-white font-poppins">MTM</span>
             </Link>
 
             {/* Nav Items */}
@@ -42,17 +43,17 @@ export function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`text-sm font-medium transition-colors hover:text-[#D32F2F] dark:hover:text-[#EF5350] relative ${
+                  className={`text-sm font-bold transition-all hover:text-red-600 relative inline-block ${
                     isActive(item.path)
-                      ? "text-[#D32F2F] dark:text-[#EF5350]"
-                      : "text-gray-700 dark:text-gray-300"
+                      ? "text-red-500 dark:text-red-400"
+                      : "text-gray-900 dark:text-gray-300"
                   }`}
                 >
                   {item.name}
                   {isActive(item.path) && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#D32F2F] dark:bg-[#EF5350]"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-500 dark:bg-red-400"
                     />
                   )}
                 </Link>
@@ -64,13 +65,13 @@ export function Navbar() {
               <ThemeToggle />
               <Link
                 to="/login"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#D32F2F] dark:hover:text-[#EF5350] transition-colors"
+                className="text-sm font-bold text-gray-900 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="px-5 py-2 bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] text-white rounded-full text-sm font-medium hover:shadow-lg hover:shadow-[#D32F2F]/30 transition-all duration-300 hover:scale-105"
+                className="px-6 py-2 bg-gradient-to-r from-[#EF4444] to-[#DC2626] text-white rounded-full text-sm font-bold shadow-md hover:shadow-lg hover:shadow-[#EF4444]/30 transition-all duration-300 hover:scale-105"
               >
                 Daftar
               </Link>
@@ -83,15 +84,15 @@ export function Navbar() {
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed top-0 left-0 right-0 z-40 md:hidden bg-white/90 dark:bg-[#1E1E1E]/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50"
+        className="fixed top-0 left-0 right-0 z-40 md:hidden bg-white dark:bg-[#121212] border-b border-gray-200 dark:border-gray-700"
       >
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">M</span>
             </div>
-            <span className="font-bold text-[#D32F2F] dark:text-[#EF5350] font-poppins">MTM</span>
+            <span className="font-bold text-gray-900 dark:text-white font-poppins">MTM</span>
           </Link>
 
           {/* Actions */}
@@ -101,7 +102,7 @@ export function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? <X className="w-6 h-6 text-gray-900 dark:text-white" /> : <Menu className="w-6 h-6 text-gray-900 dark:text-white" />}
             </button>
           </div>
         </div>
@@ -118,10 +119,10 @@ export function Navbar() {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-lg font-medium transition-colors ${
+                className={`block px-4 py-3 rounded-lg font-bold transition-all ${
                   isActive(item.path)
-                    ? "bg-[#D32F2F]/10 text-[#D32F2F] dark:bg-[#EF5350]/10 dark:text-[#EF5350]"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "bg-[#EF4444]/10 text-[#EF4444] dark:text-[#F59E0B]"
+                    : "text-[#111827] dark:text-[#E5E7EB] hover:bg-gray-100 dark:hover:bg-gray-800"
                 }`}
               >
                 {item.name}
@@ -131,14 +132,14 @@ export function Navbar() {
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="block px-4 py-3 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-center"
+                className="block px-4 py-3 rounded-lg font-bold text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-center"
               >
                 Login
               </Link>
               <Link
                 to="/register"
                 onClick={() => setIsOpen(false)}
-                className="block px-4 py-3 rounded-lg font-medium bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] text-white hover:shadow-lg transition-all text-center"
+                className="block px-4 py-3 rounded-lg font-bold bg-gradient-to-r from-[#EF4444] to-[#DC2626] text-white hover:shadow-lg transition-all text-center"
               >
                 Daftar
               </Link>

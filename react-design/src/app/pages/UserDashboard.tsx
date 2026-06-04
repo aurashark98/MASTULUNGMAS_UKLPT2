@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import React from "react";
+import { motion } from "framer-motion";
 import {
   Bell,
   CheckCircle,
@@ -10,35 +11,35 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 export function UserDashboard() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#121212] pt-24 pb-12">
+    <div className="min-h-screen bg-white dark:bg-[#121212] pt-24 pb-12">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 font-poppins">
+            <h1 className="text-3xl font-black text-[#111827] dark:text-white mb-2 font-poppins tracking-tight leading-snug py-1">
               Dashboard
             </h1>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-[#374151] dark:text-gray-300 font-bold">
               Selamat datang kembali, Budi Santoso
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="p-3 bg-white dark:bg-[#1E1E1E] rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors relative">
-              <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
+            <button className="p-3 bg-white dark:bg-[#1E1E1E] rounded-xl border border-[#E5E7EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors relative">
+              <Bell className="w-5 h-5 text-[#111827] dark:text-gray-300" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-[#EF4444] rounded-full" />
             </button>
             <Link
               to="/profile"
-              className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-[#1E1E1E] rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors"
+              className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-[#1E1E1E] rounded-xl border border-[#E5E7EB] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors shadow-sm"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-bold">BS</span>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-black">BS</span>
               </div>
-              <span className="font-medium text-gray-900 dark:text-white">Profil</span>
+              <span className="font-black text-[#111827] dark:text-white uppercase tracking-wider text-sm">Profil</span>
             </Link>
           </div>
         </div>
@@ -79,14 +80,14 @@ export function UserDashboard() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Active Tasks */}
-            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-700 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-black text-[#111827] dark:text-white">
                   Tugas Aktif
                 </h2>
                 <Link
                   to="/tasks"
-                  className="text-sm text-[#D32F2F] dark:text-[#EF5350] font-medium hover:underline"
+                  className="text-sm text-[#DC2626] dark:text-[#EF5350] font-black hover:underline"
                 >
                   Lihat Semua
                 </Link>
@@ -117,8 +118,8 @@ export function UserDashboard() {
             </div>
 
             {/* Recent History */}
-            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-700 p-6 shadow-sm">
+              <h2 className="text-xl font-black text-[#111827] dark:text-white mb-6">
                 Riwayat Terakhir
               </h2>
               <div className="space-y-4">
@@ -150,81 +151,81 @@ export function UserDashboard() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-2xl p-6 text-white">
-              <h3 className="text-lg font-bold mb-4">Perlu Bantuan?</h3>
-              <p className="text-white/90 text-sm mb-6">
+            <div className="bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-2xl p-6 text-white shadow-lg shadow-[#EF4444]/20">
+              <h3 className="text-lg font-black mb-4">Perlu Bantuan?</h3>
+              <p className="text-white font-bold text-sm mb-6">
                 Buat permintaan tugas baru dan dapatkan penawaran dari mitra terpercaya
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full py-3 bg-white text-[#D32F2F] rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="w-full py-4 bg-white text-[#DC2626] rounded-xl font-black hover:shadow-xl transition-all"
               >
                 Buat Tugas Baru
               </motion.button>
             </div>
 
             {/* Spending Summary */}
-            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-700 p-6 shadow-sm">
+              <h3 className="text-lg font-black text-[#111827] dark:text-white mb-4">
                 Pengeluaran Bulan Ini
               </h3>
               <div className="mb-4">
-                <div className="text-3xl font-bold text-[#D32F2F] dark:text-[#EF5350] mb-1">
+                <div className="text-3xl font-black text-[#DC2626] dark:text-[#EF5350] mb-1">
                   Rp 1.250.000
                 </div>
-                <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+                <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400 font-bold">
                   <TrendingUp className="w-4 h-4" />
                   <span>12% dari bulan lalu</span>
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Kurir</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">Rp 450.000</span>
+                  <span className="text-[#374151] dark:text-gray-400 font-bold">Kurir</span>
+                  <span className="font-black text-[#111827] dark:text-white">Rp 450.000</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Jasa Antre</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">Rp 300.000</span>
+                  <span className="text-[#374151] dark:text-gray-400 font-bold">Jasa Antre</span>
+                  <span className="font-black text-[#111827] dark:text-white">Rp 300.000</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Asisten</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">Rp 500.000</span>
+                  <span className="text-[#374151] dark:text-gray-400 font-bold">Asisten</span>
+                  <span className="font-black text-[#111827] dark:text-white">Rp 500.000</span>
                 </div>
               </div>
             </div>
 
             {/* Top Mitras */}
-            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-700 p-6 shadow-sm">
+              <h3 className="text-lg font-black text-[#111827] dark:text-white mb-4">
                 Mitra Favorit
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center text-white font-black text-sm">
                     AF
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900 dark:text-white text-sm">
+                    <div className="font-black text-[#111827] dark:text-white text-sm">
                       Ahmad Fauzi
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                      <span className="text-xs text-gray-600 dark:text-gray-400">4.9 (45)</span>
+                      <span className="text-xs text-[#6B7280] dark:text-gray-400 font-bold">4.9 (45)</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center text-white font-black text-sm">
                     SR
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900 dark:text-white text-sm">
+                    <div className="font-black text-[#111827] dark:text-white text-sm">
                       Siti Rahmawati
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                      <span className="text-xs text-gray-600 dark:text-gray-400">5.0 (32)</span>
+                      <span className="text-xs text-[#6B7280] dark:text-gray-400 font-bold">5.0 (32)</span>
                     </div>
                   </div>
                 </div>
@@ -237,7 +238,7 @@ export function UserDashboard() {
   );
 }
 
-function StatCard({ icon: Icon, label, value, change, color }: any) {
+function StatCard({ icon: Icon, label, value, change, color }: { icon: any, label: string, value: string, change: string, color: 'blue' | 'orange' | 'green' | 'yellow' }) {
   const colorClasses = {
     blue: "from-blue-500 to-blue-600",
     orange: "from-orange-500 to-orange-600",
@@ -259,15 +260,15 @@ function StatCard({ icon: Icon, label, value, change, color }: any) {
           {change}
         </div>
       </div>
-      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+      <div className="text-2xl font-black text-[#111827] dark:text-white mb-1">
         {value}
       </div>
-      <div className="text-sm text-gray-600 dark:text-gray-400">{label}</div>
+      <div className="text-sm text-[#374151] dark:text-gray-400 font-bold">{label}</div>
     </motion.div>
   );
 }
 
-function TaskCard({ title, mitra, status, statusColor, time }: any) {
+function TaskCard({ title, mitra, status, statusColor, time }: { title: string, mitra: string, status: string, statusColor: 'blue' | 'orange' | 'yellow', time: string }) {
   const statusColors = {
     blue: "bg-blue-100 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400",
     orange: "bg-orange-100 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400",
@@ -275,21 +276,21 @@ function TaskCard({ title, mitra, status, statusColor, time }: any) {
   };
 
   return (
-    <div className="p-4 bg-gray-50 dark:bg-[#252525] rounded-xl hover:bg-gray-100 dark:hover:bg-[#2A2A2A] transition-colors">
+    <div className="p-4 bg-gray-50 dark:bg-[#252525] rounded-xl hover:bg-gray-100 dark:hover:bg-[#2A2A2A] transition-colors border border-[#E5E7EB] dark:border-gray-700">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+          <h4 className="font-black text-[#111827] dark:text-white mb-1">
             {title}
           </h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-[#374151] dark:text-gray-400 font-bold">
             Mitra: {mitra}
           </p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColors[statusColor]}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-black ${statusColors[statusColor]}`}>
           {status}
         </span>
       </div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+      <div className="flex items-center gap-2 text-sm text-[#6B7280] dark:text-gray-400 font-bold">
         <Clock className="w-4 h-4" />
         <span>{time}</span>
       </div>
@@ -299,23 +300,23 @@ function TaskCard({ title, mitra, status, statusColor, time }: any) {
 
 function HistoryCard({ title, mitra, date, amount, rating }: any) {
   return (
-    <div className="p-4 bg-gray-50 dark:bg-[#252525] rounded-xl">
+    <div className="p-4 bg-gray-50 dark:bg-[#252525] rounded-xl border border-[#E5E7EB] dark:border-gray-700">
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+          <h4 className="font-black text-[#111827] dark:text-white mb-1">
             {title}
           </h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-[#374151] dark:text-gray-400 font-bold">
             {mitra} • {date}
           </p>
         </div>
         <div className="text-right">
-          <div className="font-semibold text-gray-900 dark:text-white mb-1">
+          <div className="font-black text-[#111827] dark:text-white mb-1">
             {amount}
           </div>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">{rating}</span>
+            <span className="text-sm text-[#374151] dark:text-gray-400 font-bold">{rating}</span>
           </div>
         </div>
       </div>

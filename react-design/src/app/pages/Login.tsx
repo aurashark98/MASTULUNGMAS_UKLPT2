@@ -1,13 +1,14 @@
-import { motion } from "motion/react";
+import React from "react";
+import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-red-50/30 to-white dark:from-[#121212] dark:via-red-950/10 dark:to-[#121212] py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#121212] py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -16,55 +17,55 @@ export function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
+            <div className="w-12 h-12 bg-gradient-to-br from-[#EF4444] to-[#F59E0B] rounded-full flex items-center justify-center">
+              <span className="text-white font-black text-lg">M</span>
             </div>
-            <span className="text-2xl font-bold text-[#D32F2F] dark:text-[#EF5350] font-poppins">
+            <span className="text-2xl font-black text-[#111827] dark:text-white font-poppins">
               Mas Tulung Mas
             </span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-black text-[#111827] dark:text-white mb-2 tracking-tight">
             Selamat Datang Kembali
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-[#374151] dark:text-gray-300 font-bold">
             Masuk untuk melanjutkan
           </p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-8">
+        <div className="bg-white dark:bg-[#1E1E1E] rounded-2xl shadow-xl border border-[#E5E7EB] dark:border-gray-800 p-8">
           <form className="space-y-6">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-black text-[#111827] dark:text-gray-300 mb-2 uppercase tracking-wider">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280]" />
                 <input
                   type="email"
                   placeholder="nama@email.com"
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D32F2F] dark:focus:ring-[#EF5350] focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white dark:bg-[#252525] border border-[#E5E7EB] dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF4444] dark:focus:ring-[#EF5350] focus:border-transparent transition-all font-bold"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-black text-[#111827] dark:text-gray-300 mb-2 uppercase tracking-wider">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280]" />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-12 py-3 bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D32F2F] dark:focus:ring-[#EF5350] focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-12 py-3 bg-white dark:bg-[#252525] border border-[#E5E7EB] dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF4444] dark:focus:ring-[#EF5350] focus:border-transparent transition-all font-bold"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#111827] dark:hover:text-gray-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -76,15 +77,15 @@ export function Login() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-[#D32F2F] border-gray-300 rounded focus:ring-[#D32F2F]"
+                  className="w-4 h-4 text-[#EF4444] border-[#E5E7EB] rounded focus:ring-[#EF4444]"
                 />
-                <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                <span className="ml-2 text-sm text-[#374151] dark:text-gray-300 font-bold">
                   Ingat saya
                 </span>
               </label>
               <Link
                 to="/forgot-password"
-                className="text-sm text-[#D32F2F] dark:text-[#EF5350] hover:underline"
+                className="text-sm text-[#DC2626] dark:text-[#EF5350] font-black hover:underline"
               >
                 Lupa password?
               </Link>
@@ -95,7 +96,7 @@ export function Login() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] text-white rounded-xl font-semibold shadow-lg shadow-[#D32F2F]/30 hover:shadow-xl hover:shadow-[#D32F2F]/40 transition-all"
+              className="w-full py-4 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] text-white rounded-xl font-black shadow-lg shadow-[#EF4444]/30 hover:shadow-xl hover:shadow-[#EF4444]/40 transition-all"
             >
               Masuk
             </motion.button>
@@ -103,10 +104,10 @@ export function Login() {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+                <div className="w-full border-t border-[#E5E7EB] dark:border-gray-700" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-[#1E1E1E] text-gray-500">
+                <span className="px-4 bg-white dark:bg-[#1E1E1E] text-[#6B7280] font-bold">
                   Atau masuk dengan
                 </span>
               </div>
@@ -116,7 +117,7 @@ export function Login() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                className="py-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors flex items-center justify-center gap-2"
+                className="py-3 border border-[#E5E7EB] dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -124,27 +125,27 @@ export function Login() {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
+                <span className="text-sm font-black text-[#111827] dark:text-gray-300">Google</span>
               </button>
               <button
                 type="button"
-                className="py-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors flex items-center justify-center gap-2"
+                className="py-3 border border-[#E5E7EB] dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Facebook</span>
+                <span className="text-sm font-black text-[#111827] dark:text-gray-300">Facebook</span>
               </button>
             </div>
           </form>
 
           {/* Register Link */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-300">
+          <div className="mt-8 text-center">
+            <p className="text-[#374151] dark:text-gray-300 font-bold">
               Belum punya akun?{" "}
               <Link
                 to="/register"
-                className="text-[#D32F2F] dark:text-[#EF5350] font-semibold hover:underline"
+                className="text-[#DC2626] dark:text-[#EF5350] font-black hover:underline"
               >
                 Daftar sekarang
               </Link>
@@ -153,12 +154,12 @@ export function Login() {
         </div>
 
         {/* Mitra Login */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="mt-8 text-center">
+          <p className="text-sm text-[#6B7280] dark:text-gray-400 font-bold">
             Ingin gabung sebagai mitra?{" "}
             <Link
               to="/mitra-login"
-              className="text-[#8B5A2B] dark:text-[#A67C52] font-semibold hover:underline"
+              className="text-[#EA580C] dark:text-[#A67C52] font-black hover:underline"
             >
               Login Mitra
             </Link>

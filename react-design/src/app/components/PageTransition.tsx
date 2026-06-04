@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import React from "react";
+import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 export function PageTransition({ children }: { children: ReactNode }) {

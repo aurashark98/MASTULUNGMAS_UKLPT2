@@ -3,24 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --mtm-red: #D32F2F;
-  --mtm-red-hover: #B71C1C;
-  --mtm-red-light: #EF5350;
-  --mtm-brown: #8B5A2B;
-  --mtm-brown-hover: #6D4422;
-  --mtm-brown-light: #A67C52;
+  /* Brand Colors - Modern SaaS Gradient */
+  --mtm-primary-start: #EF4444;
+  --mtm-primary-end: #F59E0B;
+  --mtm-accent-red: #DC2626;
+  --mtm-accent-orange: #EA580C;
 
-  /* Light Mode */
+  /* Light Mode - High Contrast SaaS Inspired (Stripe/Linear) */
   --background: #FFFFFF;
-  --foreground: #1A1A1A;
-  --border: rgba(0, 0, 0, 0.08);
-  --radius: 2rem;
+  --surface: #FFFFFF;
+  --card-premium: #FFFFFF;
+  --foreground: #111827;
+  --body-text: #374151;
+  --secondary-text: #6B7280;
+  --border: #E5E7EB;
+  --footer-bg: #F8FAFC;
+  --radius: 1rem;
 }
 
 .dark {
-  --background: #0A0A0A;
+  /* Dark Mode - Premium Modern */
+  --background: #121212;
+  --surface: #1E1E1E;
+  --card: #252525;
   --foreground: #FFFFFF;
+  --secondary-text: #D1D5DB;
   --border: rgba(255, 255, 255, 0.08);
+  --footer-bg: #0F0F0F;
 }
 
 @layer base {
@@ -36,33 +45,33 @@
 
 @layer components {
   .dot-grid {
-    background-image: radial-gradient(rgba(211, 47, 47, 0.15) 1px, transparent 0);
+    background-image: radial-gradient(rgba(239, 68, 68, 0.2) 1px, transparent 0);
     background-size: 40px 40px;
   }
 
   .plus-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 8v8M8 12h8' stroke='white' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 8v8M8 12h8' stroke='white' stroke-width='1.5' opacity='0.25'/%3E%3C/svg%3E");
     background-size: 24px 24px;
   }
 
   .glass {
-    @apply bg-white/40 dark:bg-white/[0.03] backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl;
+    @apply bg-white dark:bg-[#121212]/85 backdrop-blur-2xl border border-border dark:border-white/10 shadow-xl dark:shadow-2xl transition-shadow duration-300;
   }
   
   .glass-card {
-    @apply bg-white/60 dark:bg-white/[0.02] backdrop-blur-xl border border-gray-200/40 dark:border-white/[0.08] shadow-xl transition-all duration-500;
+    @apply bg-surface dark:bg-[#252525] border border-border dark:border-white/[0.08] shadow-lg hover:shadow-2xl transition-all duration-300;
   }
 
   .btn-premium {
-    @apply px-10 py-4 bg-gradient-premium text-white rounded-full font-bold shadow-lg shadow-mtm-red/20 hover:shadow-2xl hover:shadow-mtm-red/40 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2;
+    @apply px-10 py-4 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] text-white rounded-full font-bold shadow-lg hover:shadow-2xl hover:shadow-red-500/40 hover:brightness-110 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2;
   }
 
   .btn-outline-premium {
-    @apply px-10 py-4 bg-transparent border-2 border-mtm-brown dark:border-mtm-brown-light text-mtm-brown dark:text-mtm-brown-light rounded-full font-bold hover:bg-mtm-brown hover:text-white hover:scale-105 active:scale-95 transition-all duration-300 text-center;
+    @apply px-10 py-4 bg-transparent border-2 border-[#EF4444] text-[#EF4444] dark:text-white rounded-full font-bold hover:bg-[#EF4444]/10 dark:hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-300 text-center;
   }
 
   .heading-gradient {
-    @apply text-transparent bg-clip-text bg-gradient-premium;
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#EF4444] to-[#F59E0B];
   }
 }
 
@@ -71,6 +80,16 @@
 /* Premium Animations */
 .perspective-2000 { perspective: 2000px; }
 .rotate-y-12 { transform: rotateY(-12deg); }
+
+/* Enhanced Transitions */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

@@ -2,15 +2,15 @@
     <!-- Dot Grid Background -->
     <div class="fixed inset-0 dot-grid opacity-[0.4] pointer-events-none z-0"></div>
 
-    <section class="relative pt-32 pb-24">
-        <div class="container mx-auto px-4 relative z-10">
+    <section class="relative pt-40 pb-24">
+        <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center mb-20" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
                 <h2 x-show="shown" x-transition:enter="transition ease-out duration-1000 fade-up" 
                     class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tighter">
                     Layanan <span class="heading-gradient">MTM</span>
                 </h2>
                 <p x-show="shown" x-transition:enter="transition ease-out duration-1000 delay-200 fade-up" 
-                   class="text-xl text-gray-500 dark:text-gray-400 font-medium">
+                   class="text-xl text-[#374151] dark:text-gray-300 font-medium">
                     Temukan berbagai kategori bantuan yang kami sediakan untuk mempermudah hidup Anda.
                 </p>
             </div>
@@ -40,7 +40,7 @@
                             </div>
                             
                             <h4 class="text-2xl font-black mb-4 group-hover:text-mtm-red transition-colors">{{ $category->name }}</h4>
-                            <p class="text-gray-500 dark:text-gray-400 font-medium text-sm leading-relaxed mb-8">
+                            <p class="text-gray-600 dark:text-gray-300 font-medium text-sm leading-relaxed mb-8">
                                 {{ $category->description }}
                             </p>
                             

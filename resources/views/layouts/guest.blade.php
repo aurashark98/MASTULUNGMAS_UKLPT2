@@ -42,13 +42,8 @@
             <!-- Logo -->
             <div class="text-center mb-8">
                 <a href="{{ url('/') }}" class="inline-flex flex-col items-center gap-4 group">
-                    <div class="w-16 h-16 bg-gradient-to-br from-mtm-red to-mtm-brown rounded-[1.5rem] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
-                        <span class="text-white font-bold text-2xl">M</span>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-bold text-mtm-red dark:text-mtm-red-light font-poppins tracking-tight">Mas Tulung Mas</h1>
-                        <p class="text-sm text-mtm-brown dark:text-mtm-brown-light font-medium">Bantuan Apa Pun, Kini Dalam Satu Klik</p>
-                    </div>
+                    <img src="{{ asset('images/logomtm.png') }}" alt="MTM Logo" class="h-24 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
+                    <p class="text-sm text-mtm-brown dark:text-mtm-brown-light font-medium">Bantuan Apa Pun, Kini Dalam Satu Klik</p>
                 </a>
             </div>
 

@@ -2,15 +2,15 @@
     <!-- Dot Grid Background -->
     <div class="fixed inset-0 dot-grid opacity-[0.4] pointer-events-none z-0"></div>
 
-    <section class="relative pt-32 pb-24">
-        <div class="container mx-auto px-4 relative z-10">
+    <section class="relative pt-40 pb-24">
+        <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center mb-24" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
                 <h2 x-show="shown" x-transition:enter="transition ease-out duration-1000 fade-up" 
                     class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tighter">
                     Cara <span class="heading-gradient">Kerja</span>
                 </h2>
                 <p x-show="shown" x-transition:enter="transition ease-out duration-1000 delay-200 fade-up" 
-                   class="text-xl text-gray-500 dark:text-gray-400 font-medium">
+                   class="text-xl text-[#374151] dark:text-gray-300 font-medium">
                     Proses sederhana untuk mendapatkan bantuan yang Anda butuhkan dalam hitungan menit.
                 </p>
             </div>
@@ -21,7 +21,7 @@
                     <div x-show="shown" x-transition:enter="transition ease-out duration-1000 fade-up" class="glass-card p-12 rounded-[3rem] h-full">
                         <div class="w-16 h-16 bg-mtm-red text-white rounded-2xl flex items-center justify-center text-3xl font-black mb-8 group-hover:rotate-12 transition-transform shadow-lg shadow-mtm-red/30">1</div>
                         <h4 class="text-2xl font-black mb-6">Pilih Layanan</h4>
-                        <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed">Pilih kategori bantuan yang Anda butuhkan dari aplikasi atau website kami. Berikan detail tugas dan budget yang sesuai.</p>
+                        <p class="text-gray-600 dark:text-gray-300 font-medium leading-relaxed">Pilih kategori bantuan yang Anda butuhkan dari aplikasi atau website kami. Berikan detail tugas dan budget yang sesuai.</p>
                     </div>
                 </div>
 
@@ -30,7 +30,7 @@
                     <div x-show="shown" x-transition:enter="transition ease-out duration-1000 fade-up" class="glass-card p-12 rounded-[3rem] h-full">
                         <div class="w-16 h-16 bg-mtm-red text-white rounded-2xl flex items-center justify-center text-3xl font-black mb-8 group-hover:rotate-12 transition-transform shadow-lg shadow-mtm-red/30">2</div>
                         <h4 class="text-2xl font-black mb-6">Terima Penawaran</h4>
-                        <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed">Mitra Tulung kami akan memberikan penawaran terbaik mereka. Anda bisa melihat profil, rating, dan memilih mitra yang paling cocok.</p>
+                        <p class="text-gray-600 dark:text-gray-300 font-medium leading-relaxed">Mitra Tulung kami akan memberikan penawaran terbaik mereka. Anda bisa melihat profil, rating, dan memilih mitra yang paling cocok.</p>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                     <div x-show="shown" x-transition:enter="transition ease-out duration-1000 fade-up" class="glass-card p-12 rounded-[3rem] h-full">
                         <div class="w-16 h-16 bg-mtm-red text-white rounded-2xl flex items-center justify-center text-3xl font-black mb-8 group-hover:rotate-12 transition-transform shadow-lg shadow-mtm-red/30">3</div>
                         <h4 class="text-2xl font-black mb-6">Bantuan Selesai</h4>
-                        <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed">Setelah tugas selesai dikerjakan, lakukan pembayaran aman melalui platform kami dan berikan ulasan untuk mitra Anda.</p>
+                        <p class="text-gray-600 dark:text-gray-300 font-medium leading-relaxed">Setelah tugas selesai dikerjakan, lakukan pembayaran aman melalui platform kami dan berikan ulasan untuk mitra Anda.</p>
                     </div>
                 </div>
             </div>

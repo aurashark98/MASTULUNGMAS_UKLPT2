@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle,
@@ -34,11 +35,11 @@ export function Home() {
 
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-red-50/30 to-white dark:from-[#121212] dark:via-red-950/10 dark:to-[#121212] py-20 md:py-32">
+    <section className="relative overflow-hidden bg-white dark:bg-[#121212] py-20 md:py-32">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(211 47 47) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, #EF4444 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
       </div>
@@ -47,46 +48,43 @@ function HeroSection() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 dark:bg-red-950/30 rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-950/30 rounded-full mb-6 border border-red-100 dark:border-red-900/30"
             >
-              <Sparkles className="w-4 h-4 text-[#D32F2F]" />
-              <span className="text-sm font-medium text-[#D32F2F] dark:text-[#EF5350]">
+              <Sparkles className="w-4 h-4 text-red-600 dark:text-red-400" />
+              <span className="text-sm font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">
                 Platform Gotong Royong Digital
               </span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 font-poppins leading-tight">
-              Bantuan Apa Pun,{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D32F2F] to-[#8B5A2B]">
-                Kini Dalam Satu Klik
+            <h1 className="text-4xl md:text-7xl font-black mb-6 font-poppins leading-[1.2] tracking-tight py-2">
+              <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Bantuan Apa Pun, Kini Dalam Satu Klik
               </span>
             </h1>
 
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed font-medium">
               Mas Tulung Mas menghubungkan masyarakat dengan mitra terpercaya untuk membantu kebutuhan sehari-hari secara cepat, aman, dan profesional.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] text-white rounded-full font-semibold shadow-lg shadow-[#D32F2F]/30 hover:shadow-xl hover:shadow-[#D32F2F]/40 transition-all flex items-center justify-center gap-2 group"
+                className="px-10 py-4 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] text-white rounded-full font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
               >
                 Pesan Bantuan
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white dark:bg-[#1E1E1E] border-2 border-[#8B5A2B] dark:border-[#A67C52] text-[#8B5A2B] dark:text-[#A67C52] rounded-full font-semibold hover:bg-[#8B5A2B] hover:text-white dark:hover:bg-[#A67C52] dark:hover:text-white transition-all"
+                className="px-10 py-4 bg-white dark:bg-[#1E1E1E] border-2 border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded-full font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
               >
                 Jadi Mitra Tulung
               </motion.button>
@@ -95,7 +93,6 @@ function HeroSection() {
 
           {/* Right Visual */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="relative"
@@ -118,7 +115,7 @@ function HeroSection() {
                           transition={{ delay: 0.6 + i * 0.1 }}
                           className="aspect-square bg-gradient-to-br from-red-50 to-amber-50 dark:from-red-950/20 dark:to-amber-950/20 rounded-2xl p-4 flex items-center justify-center"
                         >
-                          <span className="text-xs font-semibold text-[#D32F2F] dark:text-[#EF5350]">
+                          <span className="text-xs font-semibold text-red-600 dark:text-red-400">
                             {service}
                           </span>
                         </motion.div>
@@ -288,15 +285,17 @@ function ServicesSection() {
     <section className="py-20 bg-white dark:bg-[#121212]">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Layanan Kami
+          <h2 className="text-3xl md:text-6xl font-black mb-4 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Layanan Kami
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-bold">
             Berbagai solusi untuk memudahkan kehidupan sehari-hari Anda
           </p>
         </motion.div>
@@ -310,15 +309,15 @@ function ServicesSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="group p-8 bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-[#D32F2F] dark:hover:border-[#EF5350] hover:shadow-xl hover:shadow-[#D32F2F]/10 transition-all duration-300"
+              className="group p-8 bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-800 hover:border-[#DC2626] dark:hover:border-[#EF5350] hover:shadow-xl transition-all duration-300 shadow-sm"
             >
-              <div className="w-14 h-14 bg-gradient-to-br from-red-50 to-amber-50 dark:from-red-950/20 dark:to-amber-950/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <service.icon className="w-7 h-7 text-[#D32F2F] dark:text-[#EF5350]" />
+              <div className="w-14 h-14 bg-gray-50 dark:bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-orange-400 group-hover:text-white group-hover:scale-110 transition-all border border-gray-100 dark:border-white/5 shadow-sm">
+                <service.icon className="w-7 h-7 text-gray-700 dark:text-red-400 group-hover:text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              <h3 className="text-xl font-black text-gray-900 dark:text-white mb-3">
                 {service.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
                 {service.description}
               </p>
             </motion.div>
@@ -357,15 +356,17 @@ function HowItWorksSection() {
     <section className="py-20 bg-gradient-to-b from-white via-gray-50 to-white dark:from-[#121212] dark:via-[#1A1A1A] dark:to-[#121212]">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Cara Kerja
+          <h2 className="text-3xl md:text-5xl font-black mb-4 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Cara Kerja
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-bold">
             Empat langkah mudah untuk mendapatkan bantuan yang Anda butuhkan
           </p>
         </motion.div>
@@ -445,15 +446,17 @@ function WhyChooseSection() {
     <section className="py-20 bg-white dark:bg-[#121212]">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Mengapa Pilih MTM?
+          <h2 className="text-3xl md:text-5xl font-black mb-4 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Mengapa Pilih MTM?
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-bold">
             Platform gotong royong digital terpercaya untuk Indonesia
           </p>
         </motion.div>
@@ -468,11 +471,11 @@ function WhyChooseSection() {
               transition={{ delay: index * 0.1 }}
               className="p-6 rounded-2xl border border-gray-100 dark:border-gray-800 hover:bg-gradient-to-br hover:from-red-50 hover:to-amber-50 dark:hover:from-red-950/10 dark:hover:to-amber-950/10 transition-all"
             >
-              <feature.icon className="w-10 h-10 text-[#D32F2F] dark:text-[#EF5350] mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              <feature.icon className="w-10 h-10 text-red-600 dark:text-red-400 mb-4" />
+              <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">
                 {feature.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-700 dark:text-gray-300 font-bold">
                 {feature.description}
               </p>
             </motion.div>
@@ -488,15 +491,17 @@ function CommunityImpactSection() {
     <section className="py-20 bg-gradient-to-b from-white via-amber-50/30 to-white dark:from-[#121212] dark:via-amber-950/5 dark:to-[#121212]">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Dampak Komunitas
+          <h2 className="text-3xl md:text-5xl font-black mb-4 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Dampak Komunitas
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-bold">
             MTM membantu berbagai lapisan masyarakat Indonesia
           </p>
         </motion.div>
@@ -516,7 +521,7 @@ function CommunityImpactSection() {
               transition={{ delay: index * 0.1 }}
               className="text-center p-8 bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-100 dark:border-gray-800"
             >
-              <div className={`text-4xl font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent mb-2`}>
+              <div className={`text-4xl font-bold text-red-500 mb-2`}>
                 {item.value}
               </div>
               <div className="text-gray-600 dark:text-gray-300 font-medium">
@@ -536,7 +541,7 @@ function TestimonialsSection() {
       name: "Budi Santoso",
       role: "Mahasiswa",
       rating: 5,
-      text: "MTM sangat membantu saya saat sibuk kuliah. Mitra yang datang selalu profesional dan tepat waktu!",
+      text: "MTM sangat membantu saya saat sibuk kuliah. Mitra yang datang selalu profesional and tepat waktu!",
       avatar: "BS",
     },
     {
@@ -556,18 +561,20 @@ function TestimonialsSection() {
   ];
 
   return (
-    <section className="py-20 bg-white dark:bg-[#121212]">
+    <section className="py-20 bg-gray-50 dark:bg-[#0F0F0F]">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Testimoni Pengguna
+          <h2 className="text-3xl md:text-6xl font-black mb-4 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Testimoni Pengguna
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-[#374151] dark:text-gray-300 max-w-2xl mx-auto font-medium">
             Apa kata mereka yang telah menggunakan MTM
           </p>
         </motion.div>
@@ -580,30 +587,30 @@ function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="p-6 bg-gradient-to-br from-white/80 to-white dark:from-[#1E1E1E]/80 dark:to-[#1E1E1E] backdrop-blur-xl rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-[#D32F2F] dark:hover:border-[#EF5350] hover:shadow-xl transition-all"
+              className="p-8 bg-white dark:bg-[#1E1E1E] rounded-3xl border border-[#E5E7EB] dark:border-gray-800 hover:shadow-xl transition-all duration-500 shadow-sm"
             >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#D32F2F] to-[#8B5A2B] rounded-full flex items-center justify-center text-white font-bold">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-md">
                   {testimonial.avatar}
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 dark:text-white">
+                  <div className="font-black text-gray-900 dark:text-white text-lg">
                     {testimonial.name}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="text-sm text-gray-500 dark:text-gray-400 font-bold">
                     {testimonial.role}
                   </div>
                 </div>
               </div>
-              <div className="flex gap-1 mb-4">
+              <div className="flex gap-1 mb-6">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (
                   <Star
                     key={i}
-                    className="w-4 h-4 text-yellow-500 fill-yellow-500"
+                    className="w-4 h-4 text-amber-500 fill-amber-500"
                   />
                 ))}
               </div>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium italic">
                 "{testimonial.text}"
               </p>
             </motion.div>
@@ -637,21 +644,18 @@ function FAQSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white via-gray-50 to-white dark:from-[#121212] dark:via-[#1A1A1A] dark:to-[#121212]">
+    <section className="py-20 bg-white dark:bg-[#121212]">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 font-poppins">
-            Pertanyaan Umum
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-black mb-6 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Pertanyaan Umum
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-[#374151] dark:text-gray-400 max-w-2xl mx-auto font-bold">
             Temukan jawaban untuk pertanyaan yang sering ditanyakan
           </p>
-        </motion.div>
+        </div>
 
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
@@ -661,20 +665,23 @@ function FAQSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+              className="bg-white dark:bg-[#1E1E1E] rounded-2xl border border-[#E5E7EB] dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-md transition-all"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors"
+                className="w-full p-6 flex items-center justify-between text-left group"
               >
-                <span className="font-semibold text-gray-900 dark:text-white pr-4">
+                <span 
+                  className={`font-black pr-4 text-xl transition-all inline-block py-1 ${openIndex === index ? 'text-red-500 dark:text-orange-400' : 'text-gray-900 dark:text-white group-hover:text-red-600'}`}
+                >
                   {faq.question}
                 </span>
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${openIndex === index ? 'bg-gradient-to-r from-red-500 to-orange-400' : 'bg-gray-50 dark:bg-white/5'}`}
                 >
-                  <ArrowRight className="w-5 h-5 text-[#D32F2F] dark:text-[#EF5350] rotate-90" />
+                  <ArrowRight className={`w-4 h-4 rotate-90 transition-colors ${openIndex === index ? 'text-white' : 'text-gray-700 dark:text-gray-400'}`} />
                 </motion.div>
               </button>
               <motion.div
@@ -686,7 +693,7 @@ function FAQSection() {
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <div className="px-6 pb-6 text-gray-600 dark:text-gray-300">
+                <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
                   {faq.answer}
                 </div>
               </motion.div>
@@ -701,40 +708,46 @@ function FAQSection() {
 function CTASection() {
   return (
     <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-[#D32F2F] to-[#8B5A2B]" />
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 bg-[#0F0F0F]" />
+      <div className="absolute inset-0 opacity-[0.05]">
         <div className="absolute inset-0" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }} />
       </div>
+      
+      {/* Glow Effects */}
+      <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-[#EF4444]/10 rounded-full blur-[120px]" />
+      <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-[#F59E0B]/10 rounded-full blur-[120px]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 font-poppins">
-            Gotong Royong Kini Dalam Genggaman
+          <h2 className="text-3xl md:text-7xl font-black mb-6 font-poppins tracking-tight leading-[1.2] py-2">
+            <span className="bg-gradient-to-r from-[#EF4444] to-[#F59E0B] bg-clip-text text-transparent py-1 inline-block" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Siap Memulai Perubahan?
+            </span>
           </h2>
-          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            Bergabunglah dengan ribuan pengguna yang telah merasakan kemudahan bantuan dalam satu klik
+          <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto font-medium">
+            Bergabunglah dengan ekosistem gotong royong digital terbesar di Indonesia. Bantuan kini lebih dekat dari yang Anda bayangkan.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-white text-[#D32F2F] rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+              className="px-14 py-6 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white rounded-full font-black text-xl shadow-2xl hover:bg-gray-50 transition-all"
             >
-              Pesan Sekarang
+              Daftar Sekarang
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#D32F2F] transition-all"
+              className="px-14 py-6 bg-transparent border-2 border-white/10 text-white rounded-full font-black text-xl hover:bg-white hover:text-gray-900 transition-all"
             >
-              Gabung Menjadi Mitra
+              Hubungi Kami
             </motion.button>
           </div>
         </motion.div>
@@ -745,63 +758,64 @@ function CTASection() {
 
 function Footer() {
   return (
-    <footer className="bg-[#8B5A2B] dark:bg-[#6D4422] text-white pt-16 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <span className="text-[#D32F2F] font-bold">M</span>
-              </div>
-              <span className="text-xl font-bold font-poppins">Mas Tulung Mas</span>
+    <footer className="bg-gray-50 dark:bg-[#0F0F0F] text-gray-700 dark:text-gray-400 pt-32 pb-16 border-t border-gray-200 dark:border-white/5 relative overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-400" />
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid md:grid-cols-4 gap-16 mb-24">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-4 mb-8">
+              <img src="/images/logomtm.png" alt="MTM Logo" className="h-16 w-auto object-contain" />
             </div>
-            <p className="text-white/80 text-sm leading-relaxed">
-              Platform gotong royong digital yang menghubungkan masyarakat dengan mitra terpercaya.
+            <p className="text-gray-700 dark:text-gray-400 max-w-md leading-relaxed text-lg font-medium">
+              Platform digital gotong royong yang menghubungkan masyarakat dengan mitra terpercaya untuk segala jenis bantuan dalam satu klik.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold mb-4">Layanan</h4>
-            <ul className="space-y-2 text-sm text-white/80">
-              <li><a href="#" className="hover:text-white transition-colors">Kurir & Logistik</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Asisten Personal</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Jasa Antre</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Pendamping Lansia</a></li>
+            <h4 className="font-black text-gray-900 dark:text-white mb-8 font-poppins text-lg uppercase tracking-widest">Layanan</h4>
+            <ul className="space-y-4">
+              {['Kurir Express', 'Asisten Pribadi', 'Jasa Antre', 'Bantuan Teknis', 'Kebersihan Rumah'].map((item) => (
+                <li key={item}>
+                  <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-2 group font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-red-600 transition-colors" />
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold mb-4">Perusahaan</h4>
-            <ul className="space-y-2 text-sm text-white/80">
-              <li><a href="#" className="hover:text-white transition-colors">Tentang Kami</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Cara Kerja</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Karir</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+            <h4 className="font-black text-gray-900 dark:text-white mb-8 font-poppins text-lg uppercase tracking-widest">Perusahaan</h4>
+            <ul className="space-y-4">
+              {['Tentang Kami', 'Karir', 'Syarat & Ketentuan', 'Kebijakan Privasi', 'Pusat Bantuan'].map((item) => (
+                <li key={item}>
+                  <a href="#" className="hover:text-red-600 transition-colors flex items-center gap-2 group font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-red-600 transition-colors" />
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold mb-4">Newsletter</h4>
-            <p className="text-sm text-white/80 mb-4">
-              Dapatkan update terbaru dari MTM
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Email Anda"
-                className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/40"
-              />
-              <button className="px-4 py-2 bg-[#D32F2F] hover:bg-[#B71C1C] rounded-lg transition-colors">
-                <MessageCircle className="w-5 h-5" />
-              </button>
-            </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/20 text-center text-sm text-white/60">
-          <p>&copy; 2026 Mas Tulung Mas. All rights reserved. Made with ❤️ in Indonesia</p>
+        <div className="pt-12 border-t border-[#E5E7EB] dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 font-medium">
+          <p className="text-sm">
+            &copy; {new Date().getFullYear()} <span 
+              className="text-[#EF4444] dark:text-[#F59E0B] font-black py-1 inline-block"
+            >Mas Tulung Mas</span>. Seluruh hak cipta dilindungi.
+          </p>
+          <div className="flex items-center gap-6 text-sm">
+            <span>Dibuat dengan <span className="text-red-600 animate-pulse">♥</span> untuk Indonesia</span>
+            <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <span>v1.0.0</span>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
+
+
