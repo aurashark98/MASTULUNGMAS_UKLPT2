@@ -33,13 +33,13 @@
                     <!-- CTA Buttons -->
                     <div x-show="shown" x-transition:enter="transition ease-out duration-1000 delay-600 fade-up" 
                          class="flex flex-col sm:flex-row gap-6">
-                        <a href="{{ route('register') }}" class="btn-premium">
+                        <a href="{{ route('register') }}" @click.prevent="$dispatch('open-modal', 'auth-modal'); setTimeout(() => $dispatch('open-auth-modal', { tab: 'register', role: 'user' }), 50)" class="btn-premium">
                             Pesan Bantuan
                             <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
                         </a>
-                        <a href="{{ route('register', ['role' => 'mitra']) }}" class="btn-outline-premium">
+                        <a href="{{ route('register', ['role' => 'mitra']) }}" @click.prevent="$dispatch('open-modal', 'auth-modal'); setTimeout(() => $dispatch('open-auth-modal', { tab: 'register', role: 'mitra' }), 50)" class="btn-outline-premium">
                             Jadi Mitra Tulung
                         </a>
                     </div>
@@ -331,7 +331,7 @@
                     </p>
                     <div x-show="shown" x-transition:enter="transition ease-out duration-1000 delay-400 fade-up" 
                          class="flex flex-col sm:flex-row justify-center gap-8">
-                        <a href="{{ route('register') }}" class="px-14 py-6 bg-white text-[#1A1A1A] rounded-full font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl">Daftar Sekarang</a>
+                        <a href="{{ route('register') }}" @click.prevent="$dispatch('open-modal', 'auth-modal'); setTimeout(() => $dispatch('open-auth-modal', { tab: 'register', role: 'user' }), 50)" class="px-14 py-6 bg-white text-[#1A1A1A] rounded-full font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl">Daftar Sekarang</a>
                         <a href="#" class="px-14 py-6 border-2 border-white/10 text-white rounded-full font-black text-xl hover:bg-white hover:text-[#1A1A1A] transition-all">Hubungi Kami</a>
                     </div>
                 </div>

@@ -20,8 +20,7 @@ class DashboardController extends Controller
         ];
 
         $recent_tasks = Task::with('user', 'category')->latest()->limit(5)->get();
-        $unverified_mitra = User::where('role', 'mitra')
-            ->whereHas('mitraProfile', function($query) {
+        $unverified_mitra = User::whereHas('mitraProfile', function($query) {
                 $query->where('is_verified', false);
             })
             ->with('mitraProfile')
@@ -32,7 +31,19 @@ class DashboardController extends Controller
 
     public function verifyMitra(User $user)
     {
-        $user->mitraProfile->update(['is_verified' => true]);
+        if ($user->mitraProfile) {
+            $user->mitraProfile->update(['is_verified' => true]);
+        }
+        $user->update(['role' => 'mitra']);
         return redirect()->back()->with('success', 'Mitra berhasil diverifikasi!');
+    }
+
+    public function rejectMitra(User $user)
+    {
+        if ($user->mitraProfile) {
+            $user->mitraProfile->delete();
+        }
+        $user->update(['role' => 'user']);
+        return redirect()->back()->with('success', 'Pengajuan Mitra berhasil ditolak!');
     }
 }

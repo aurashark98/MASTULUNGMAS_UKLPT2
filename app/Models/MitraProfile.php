@@ -13,6 +13,7 @@ class MitraProfile extends Model
         'skills',
         'bio',
         'is_verified',
+        'is_online',
         'rating',
         'earnings',
     ];
@@ -20,6 +21,7 @@ class MitraProfile extends Model
     protected $casts = [
         'skills' => 'array',
         'is_verified' => 'boolean',
+        'is_online' => 'boolean',
         'rating' => 'decimal:2',
         'earnings' => 'decimal:2',
     ];

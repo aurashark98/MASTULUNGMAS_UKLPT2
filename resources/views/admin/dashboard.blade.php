@@ -1,9 +1,4 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Admin Control Panel') }}
-        </h2>
-    </x-slot>
+<x-admin-layout>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
@@ -71,19 +66,46 @@
                         <div class="space-y-6">
                             @forelse($unverified_mitra as $mitra)
                                 <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-mtm-dark/30 rounded-2xl">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                    <div class="flex items-start gap-3">
+                                        @if($mitra->mitraProfile && $mitra->mitraProfile->profile_photo_path)
+                                            <img src="{{ asset('storage/' . $mitra->mitraProfile->profile_photo_path) }}" class="w-10 h-10 rounded-full object-cover border border-gray-100 dark:border-gray-800" alt="Foto Profil" />
+                                        @else
+                                            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-400">
+                                                {{ strtoupper(substr($mitra->name, 0, 1)) }}
+                                            </div>
+                                        @endif
                                         <div>
-                                            <p class="font-bold text-sm">{{ $mitra->name }}</p>
-                                            <p class="text-[10px] text-gray-500">{{ $mitra->email }}</p>
+                                            <p class="font-bold text-sm leading-tight">{{ $mitra->name }}</p>
+                                            <p class="text-[10px] text-gray-500 mb-1">{{ $mitra->email }}</p>
+                                            
+                                            <div class="flex flex-wrap items-center gap-1.5 text-[9px] font-bold">
+                                                @if($mitra->mitraProfile && $mitra->mitraProfile->ktp_path)
+                                                    <a href="{{ asset('storage/' . $mitra->mitraProfile->ktp_path) }}" target="_blank" class="text-amber-600 hover:text-amber-500 hover:underline flex items-center gap-0.5">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5l-2-3z"></path></svg>
+                                                        Lihat KTP
+                                                    </a>
+                                                    <span class="text-gray-300 dark:text-gray-700">|</span>
+                                                @endif
+                                                <span class="text-gray-400">
+                                                    Keahlian: {{ implode(', ', $mitra->mitraProfile->skills ?? []) }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <form action="{{ route('admin.mitra.verify', $mitra) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="px-4 py-2 bg-mtm-red text-white text-[10px] font-bold rounded-lg">
-                                            Verifikasi
-                                        </button>
-                                    </form>
+                                    <div class="flex items-center gap-2">
+                                        <form action="{{ route('admin.mitra.verify', $mitra) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="px-4 py-2.5 bg-green-600 hover:bg-green-700 transition-colors text-white text-[10px] font-black rounded-xl cursor-pointer shadow-sm">
+                                                Terima
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.mitra.reject', $mitra) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pengajuan mitra ini?')">
+                                            @csrf
+                                            <button type="submit" class="px-4 py-2.5 bg-mtm-red hover:bg-mtm-red/95 transition-colors text-white text-[10px] font-black rounded-xl cursor-pointer shadow-sm">
+                                                Tolak
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             @empty
                                 <p class="text-sm text-gray-500 text-center py-4">Semua mitra sudah terverifikasi.</p>
@@ -94,4 +116,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
