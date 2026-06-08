@@ -19,13 +19,9 @@
         <div class="glass-card rounded-[2.5rem] p-8 md:p-10 border border-gray-200/50 dark:border-white/5 bg-white/40 dark:bg-[#1a1a1a]/40 backdrop-blur-md shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
             <div class="flex items-center gap-6 text-center md:text-left flex-col md:flex-row">
                 <div class="relative">
-                    @if($profile->profile_photo_path)
-                        <img src="{{ asset('storage/' . $profile->profile_photo_path) }}" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-white/10 shadow-lg" />
-                    @else
-                        <div class="w-24 h-24 rounded-full bg-gradient-to-r from-red-500 to-amber-500 flex items-center justify-center text-white text-3xl font-black shadow-lg">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
-                    @endif
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-white/10 shadow-lg">
+                        <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" />
+                    </div>
                     <!-- Online indicator dot -->
                     <div class="absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-white dark:border-[#1a1a1a] {{ $profile->is_online ? 'bg-green-500 animate-pulse' : 'bg-gray-400' }}"></div>
                 </div>

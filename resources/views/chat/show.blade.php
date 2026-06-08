@@ -25,12 +25,8 @@
             <!-- Chat Partner Header -->
             <div class="p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-black/20 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="relative w-10 h-10 bg-white dark:bg-white/10 rounded-full flex items-center justify-center text-mtm-red text-sm font-black border border-gray-200 dark:border-white/5 overflow-hidden">
-                        @if($partner->mitraProfile && $partner->mitraProfile->profile_photo_path)
-                            <img src="{{ asset('storage/' . $partner->mitraProfile->profile_photo_path) }}" class="w-full h-full object-cover">
-                        @else
-                            {{ strtoupper(substr($partner->name, 0, 1)) }}
-                        @endif
+                    <div class="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200 dark:border-white/5">
+                        <img src="{{ $partner->profile_photo_url }}" class="w-full h-full object-cover">
                         
                         <!-- Status indicator -->
                         <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white dark:border-[#1a1a1a] {{ $isPartnerOnline ? 'bg-green-500' : 'bg-gray-400' }}"></span>

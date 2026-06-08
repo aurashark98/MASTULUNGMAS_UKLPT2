@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/register-mitra', [ProfileController::class, 'showRegisterMitra'])->name('profile.register-mitra');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/photo', [ProfileController::class, 'removePhoto'])->name('profile.photo.destroy');
     Route::patch('/profile/mitra', [ProfileController::class, 'updateMitraProfile'])->name('profile.mitra.update');
     Route::post('/profile/password/send-otp', [ProfileController::class, 'sendPasswordOTP'])->name('profile.password.send-otp');
     Route::post('/profile/upgrade', [ProfileController::class, 'upgradeToMitra'])->name('profile.upgrade');

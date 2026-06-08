@@ -153,14 +153,12 @@
                         <div class="space-y-6">
                             <h4 class="text-lg font-bold text-gray-900 dark:text-white font-poppins">Penawaran Masuk ({{ $task->bids->count() }})</h4>
                             @forelse($task->bids as $bid)
-                                <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm flex items-center justify-between">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-gray-200 rounded-full flex-shrink-0">
-                                            @if($bid->mitra->mitraProfile->profile_photo_path)
-                                                <img src="{{ asset('storage/' . $bid->mitra->mitraProfile->profile_photo_path) }}" class="w-full h-full rounded-full object-cover">
-                                            @endif
-                                        </div>
-                                        <div>
+                            <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden border border-gray-100 dark:border-white/5">
+                                        <img src="{{ $bid->mitra->profile_photo_url }}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
                                             <h5 class="font-bold text-sm">{{ $bid->mitra->name }}</h5>
                                             <div class="flex items-center gap-1 text-xs text-yellow-500">
                                                 <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -242,13 +240,13 @@
             <!-- Sidebar Info -->
             <div class="space-y-8">
                 <div class="bg-white dark:bg-mtm-dark-surface p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
-                    <h4 class="font-bold mb-4 font-poppins text-gray-900 dark:text-white">Pembuat Tugas</h4>
+                    <h4 class="font-bold mb-4 font-poppins">Pembuat Tugas</h4>
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <div class="w-12 h-12 rounded-full overflow-hidden border border-gray-100 dark:border-white/5">
+                            <img src="{{ $task->user->profile_photo_url }}" class="w-full h-full object-cover">
                         </div>
                         <div>
-                            <p class="font-bold text-sm text-gray-900 dark:text-white">{{ $task->user->name }}</p>
+                            <p class="font-bold text-sm">{{ $task->user->name }}</p>
                             <p class="text-xs text-gray-500">Anggota sejak {{ $task->user->created_at->format('M Y') }}</p>
                         </div>
                     </div>
