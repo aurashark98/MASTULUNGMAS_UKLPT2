@@ -38,6 +38,12 @@ class ProfileUpdateRequest extends FormRequest
                 'string',
                 'max:20',
             ],
+            'profile_photo' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
         ];
     }
 }

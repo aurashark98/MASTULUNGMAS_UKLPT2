@@ -33,14 +33,24 @@
             @endif
 
             <!-- Welcome Card -->
-            <div class="bg-gradient-to-r from-mtm-red to-mtm-brown overflow-hidden shadow-xl sm:rounded-3xl p-8 text-white relative">
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-bold mb-2">Halo, {{ Auth::user()->name }}!</h3>
-                    <p class="text-red-100 opacity-90">Butuh bantuan apa hari ini? Mitra kami siap membantu Anda.</p>
-                    <div class="mt-6">
-                        <a href="{{ route('tasks.create') }}" class="inline-flex items-center px-6 py-3 bg-white text-mtm-red rounded-full font-bold shadow-lg hover:bg-gray-100 transition-all">
-                            Buat Tugas Baru
-                        </a>
+            <div class="bg-gradient-to-r from-mtm-red to-mtm-brown overflow-hidden shadow-xl sm:rounded-[2.5rem] p-8 md:p-10 text-white relative">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                    <!-- Profile Photo in Dashboard -->
+                    <div class="flex-shrink-0">
+                        <div class="w-32 h-32 rounded-[2.2rem] overflow-hidden border-4 border-white/20 shadow-2xl">
+                            <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h3 class="text-3xl font-black mb-2 font-poppins">Halo, {{ Auth::user()->name }}!</h3>
+                        <p class="text-red-100 opacity-90 font-medium">Butuh bantuan apa hari ini? Mitra kami siap membantu Anda.</p>
+                        <div class="mt-8">
+                            <a href="{{ route('tasks.create') }}" class="inline-flex items-center px-8 py-4 bg-white text-mtm-red rounded-2xl font-black shadow-lg hover:shadow-white/10 hover:scale-105 active:scale-95 transition-all">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                Buat Tugas Baru
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <!-- Background Pattern -->

@@ -51,9 +51,11 @@ class ServiceCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            ServiceCategory::create(array_merge($category, [
-                'slug' => \Illuminate\Support\Str::slug($category['name'])
-            ]));
+            $slug = \Illuminate\Support\Str::slug($category['name']);
+            ServiceCategory::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($category, ['slug' => $slug])
+            );
         }
     }
 }
