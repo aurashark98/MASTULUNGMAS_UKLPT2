@@ -14,9 +14,12 @@ class DashboardController extends Controller
     {
         $stats = [
             'total_users' => User::where('role', 'user')->count(),
-            'total_mitra' => User::where('role', 'mitra')->count(),
+            'total_mitra' => User::where('role', 'mitra')->orWhereHas('mitraProfile', function($query) { $query->where('is_verified', true); })->count(),
             'total_tasks' => Task::count(),
+            'total_completed_tasks' => Task::where('status', 'completed')->count(),
             'total_revenue' => Payment::where('status', 'completed')->sum('amount'),
+            'total_transactions' => Payment::count(),
+            'average_rating' => \App\Models\Review::avg('rating') ?: 5.0,
         ];
 
         $recent_tasks = Task::with('user', 'category')->latest()->limit(5)->get();

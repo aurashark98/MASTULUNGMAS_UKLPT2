@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\ActivityLog;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,6 +30,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+        
+        ActivityLog::log('Login', 'Pengguna masuk ke sistem (' . $user->name . ')');
+
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'mitra') {
@@ -44,6 +48,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        if ($user) {
+            ActivityLog::log('Logout', 'Pengguna keluar dari sistem (' . $user->name . ')', $user->id);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

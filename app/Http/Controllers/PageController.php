@@ -12,8 +12,19 @@ class PageController extends Controller
         if (auth()->check() && auth()->user()->role === 'mitra') {
             return redirect()->route('mitra.dashboard');
         }
+
+        $totalUsers = \App\Models\User::count();
+        $totalMitra = \App\Models\MitraProfile::where('is_verified', true)->count();
+        $totalCompletedTasks = \App\Models\Task::where('status', 'completed')->count();
+        $avgRating = \App\Models\Review::avg('rating') ?: 5.0;
+        $satisfactionRate = number_format(($avgRating / 5.0) * 100, 0);
+
         return view('welcome', [
-            'categories' => ServiceCategory::all()
+            'categories' => ServiceCategory::all(),
+            'totalUsers' => $totalUsers,
+            'totalMitra' => $totalMitra,
+            'totalCompletedTasks' => $totalCompletedTasks,
+            'satisfactionRate' => $satisfactionRate,
         ]);
     }
 

@@ -13,6 +13,9 @@ class Task extends Model
         'description',
         'budget',
         'location',
+        'destination_location',
+        'distance',
+        'duration',
         'images',
         'status',
     ];

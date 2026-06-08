@@ -16,6 +16,10 @@ class MitraProfile extends Model
         'is_online',
         'rating',
         'earnings',
+        'service_area',
+        'service_radius',
+        'operational_hours',
+        'portfolio_images',
     ];
 
     protected $casts = [
@@ -24,6 +28,7 @@ class MitraProfile extends Model
         'is_online' => 'boolean',
         'rating' => 'decimal:2',
         'earnings' => 'decimal:2',
+        'portfolio_images' => 'array',
     ];
 
     public function user()

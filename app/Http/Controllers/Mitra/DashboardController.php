@@ -84,6 +84,18 @@ class DashboardController extends Controller
         }
 
         $task->update(['status' => 'in_progress']);
+
+        // Log Activity
+        \App\Models\ActivityLog::log('Task Progress', "Mulai pengerjaan tugas '{$task->title}'");
+
+        // Notify Task Owner
+        $task->user->sendNotification(
+            'task_in_progress',
+            'Tugas Mulai Dikerjakan',
+            "Mitra " . Auth::user()->name . " telah mulai mengerjakan tugas '{$task->title}'.",
+            route('tasks.show', $task)
+        );
+
         return redirect()->back()->with('success', 'Pekerjaan telah dimulai. Selamat bekerja!');
     }
 
@@ -102,6 +114,17 @@ class DashboardController extends Controller
         if ($profile) {
             $profile->increment('earnings', $task->budget);
         }
+
+        // Log Activity
+        \App\Models\ActivityLog::log('Task Completion', "Menyelesaikan pengerjaan tugas '{$task->title}'");
+
+        // Notify Task Owner
+        $task->user->sendNotification(
+            'task_completed',
+            'Tugas Selesai Dikerjakan',
+            "Mitra " . Auth::user()->name . " telah menandai tugas '{$task->title}' sebagai selesai. Silakan lakukan pembayaran.",
+            route('tasks.show', $task)
+        );
 
         return redirect()->back()->with('success', 'Pekerjaan berhasil diselesaikan! Pendapatan Anda telah ditambahkan.');
     }

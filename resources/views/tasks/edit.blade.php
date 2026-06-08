@@ -1,22 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Buat Tugas Baru') }}
+            {{ __('Edit Tugas') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-mtm-dark-surface overflow-hidden shadow-xl sm:rounded-3xl p-8">
-                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('tasks.update', $task) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
+                    @method('PATCH')
 
                     <div>
                         <x-input-label for="category_id" :value="__('Kategori Layanan')" />
                         <select id="category_id" name="category_id" onchange="updatePrice()" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-mtm-dark text-gray-900 dark:text-gray-100 focus:border-mtm-red focus:ring-mtm-red rounded-xl shadow-sm">
                             <option value="">Pilih Kategori</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" @selected($category->id == request('category_id')) class="text-gray-900 dark:text-gray-100">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" {{ $task->category_id == $category->id ? 'selected' : '' }} class="text-gray-900 dark:text-gray-100">{{ $category->name }}</option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
@@ -24,26 +25,26 @@
 
                     <div>
                         <x-input-label for="title" :value="__('Judul Tugas')" />
-                        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full text-gray-900 dark:text-gray-100" placeholder="Contoh: Bantu Antre Tiket Konser" required />
+                        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="{{ $task->title }}" required />
                         <x-input-error :messages="$errors->get('title')" class="mt-2" />
                     </div>
 
                     <div>
                         <x-input-label for="description" :value="__('Deskripsi')" />
-                        <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-mtm-dark text-gray-900 dark:text-gray-100 focus:border-mtm-red focus:ring-mtm-red rounded-xl shadow-sm" placeholder="Jelaskan bantuan apa yang Anda butuhkan secara detail..." required></textarea>
+                        <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-mtm-dark text-gray-900 dark:text-gray-100 focus:border-mtm-red focus:ring-mtm-red rounded-xl shadow-sm" required>{{ $task->description }}</textarea>
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <x-input-label for="distance" :value="__('Estimasi Jarak Tempuh (Km)')" />
-                            <x-text-input id="distance" name="distance" type="number" step="0.1" min="0" class="mt-1 block w-full text-gray-900 dark:text-gray-100 bg-gray-150 dark:bg-white/5 font-bold cursor-not-allowed" value="0.0" required readonly />
+                            <x-text-input id="distance" name="distance" type="number" step="0.1" min="0" class="mt-1 block w-full text-gray-900 dark:text-gray-100 bg-gray-150 dark:bg-white/5 font-bold cursor-not-allowed" value="{{ $task->distance }}" required readonly />
                             <x-input-error :messages="$errors->get('distance')" class="mt-2" />
                             <p class="text-[10px] text-gray-500 mt-1">Dihitung otomatis dari peta (Rp 3.000 / Km)</p>
                         </div>
                         <div>
                             <x-input-label for="duration" :value="__('Estimasi Durasi Kerja (Jam)')" />
-                            <x-text-input id="duration" name="duration" type="number" min="1" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="1" required oninput="updatePrice()" />
+                            <x-text-input id="duration" name="duration" type="number" min="1" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="{{ $task->duration }}" required oninput="updatePrice()" />
                             <x-input-error :messages="$errors->get('duration')" class="mt-2" />
                             <p class="text-[10px] text-gray-500 mt-1">Biaya per Jam: Rp 10.000</p>
                         </div>
@@ -76,7 +77,7 @@
                             <x-input-label for="location" :value="__('Lokasi Asal (Penjemputan/Mulai)')" />
                             <div class="flex flex-col sm:flex-row gap-2 mt-1">
                                 <div class="relative flex-1">
-                                    <x-text-input id="location" name="location" type="text" class="block w-full text-gray-900 dark:text-gray-100" placeholder="Ketik lokasi asal atau seret pin biru di peta" required />
+                                    <x-text-input id="location" name="location" type="text" class="block w-full text-gray-900 dark:text-gray-100" value="{{ $task->location }}" required />
                                 </div>
                                 <div class="flex gap-2 shrink-0">
                                     <button type="button" id="btn-search-origin" class="px-5 py-3 bg-gray-150 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold border border-gray-300 dark:border-gray-700 transition-all cursor-pointer">
@@ -99,7 +100,7 @@
                             <x-input-label for="destination_location" :value="__('Lokasi Tujuan (Akhir)')" />
                             <div class="flex flex-col sm:flex-row gap-2 mt-1">
                                 <div class="relative flex-1">
-                                    <x-text-input id="destination_location" name="destination_location" type="text" class="block w-full text-gray-900 dark:text-gray-100" placeholder="Ketik lokasi tujuan atau seret pin merah di peta" required />
+                                    <x-text-input id="destination_location" name="destination_location" type="text" class="block w-full text-gray-900 dark:text-gray-100" value="{{ $task->destination_location }}" placeholder="Ketik lokasi tujuan atau seret pin merah di peta" required />
                                 </div>
                                 <div class="flex gap-2 shrink-0">
                                     <button type="button" id="btn-search-destination" class="px-5 py-3 bg-gray-150 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold border border-gray-300 dark:border-gray-700 transition-all cursor-pointer">
@@ -127,14 +128,24 @@
                     </div>
 
                     <div>
-                        <x-input-label for="images" :value="__('Unggah Foto (Opsional)')" />
+                        <x-input-label for="images" :value="__('Unggah Foto Tambahan (Opsional)')" />
                         <input type="file" id="images" name="images[]" multiple class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-mtm-red hover:file:bg-red-100" />
-                        <p class="mt-2 text-xs text-gray-500">Maksimal 3 foto, masing-masing 2MB.</p>
+                        
+                        @if($task->images)
+                            <div class="mt-4 grid grid-cols-3 gap-4">
+                                @foreach($task->images as $image)
+                                    <div class="relative">
+                                        <img src="{{ asset('storage/' . $image) }}" class="w-full h-20 object-cover rounded-xl" alt="Task Image">
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="flex items-center justify-end pt-4">
+                    <div class="flex items-center justify-between pt-4">
+                        <a href="{{ route('tasks.show', $task) }}" class="text-sm font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Batal</a>
                         <x-primary-button class="bg-gradient-to-r from-mtm-red to-mtm-red-dark hover:from-mtm-red-dark hover:to-mtm-red py-3 px-8 rounded-full">
-                            {{ __('Publikasikan Tugas') }}
+                            {{ __('Simpan Perubahan') }}
                         </x-primary-button>
                     </div>
                 </form>

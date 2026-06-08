@@ -132,7 +132,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($categories as $category)
-                    <div class="group bg-white dark:bg-[#252525] p-10 rounded-[3rem] border border-[#E5E7EB] dark:border-white/5 hover:shadow-2xl hover:shadow-red-500/20 dark:hover:shadow-red-500/40 hover:-translate-y-2 cursor-pointer transition-all duration-500"
+                    <a href="{{ route('tasks.create', ['category_id' => $category->id]) }}" class="block group bg-white dark:bg-[#252525] p-10 rounded-[3rem] border border-[#E5E7EB] dark:border-white/5 hover:shadow-2xl hover:shadow-red-500/20 dark:hover:shadow-red-500/40 hover:-translate-y-2 transition-all duration-500"
                          x-data="{ shown: false }" x-intersect="shown = true"
                          x-show="shown" x-transition:enter="transition ease-out duration-700 delay-{{ $loop->index * 100 }} fade-up">
                         
@@ -151,7 +151,7 @@
                             Pesan Sekarang
                             <svg class="w-4 h-4 text-[#EA580C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>
@@ -167,10 +167,10 @@
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-12">
                     @php
                         $stats = [
-                            ['label' => 'Pengguna', 'value' => '10', 'suffix' => '+'],
-                            ['label' => 'Mitra', 'value' => '1', 'suffix' => '+'],
-                            ['label' => 'Tugas Selesai', 'value' => '25', 'suffix' => '+'],
-                            ['label' => 'Kepuasan', 'value' => '98', 'suffix' => '%'],
+                            ['label' => 'Pengguna', 'value' => $totalUsers ?? 10, 'suffix' => '+'],
+                            ['label' => 'Mitra', 'value' => $totalMitra ?? 1, 'suffix' => '+'],
+                            ['label' => 'Tugas Selesai', 'value' => $totalCompletedTasks ?? 25, 'suffix' => '+'],
+                            ['label' => 'Kepuasan', 'value' => $satisfactionRate ?? 98, 'suffix' => '%'],
                         ];
                     @endphp
                     @foreach($stats as $stat)

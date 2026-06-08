@@ -16,4 +16,17 @@ class ActivityLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function log($action, $description = null, $userId = null)
+    {
+        $id = $userId ?? auth()->id();
+        if ($id) {
+            return self::create([
+                'user_id' => $id,
+                'action' => $action,
+                'description' => $description,
+            ]);
+        }
+        return null;
+    }
 }

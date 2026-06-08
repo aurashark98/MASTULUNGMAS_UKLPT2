@@ -38,7 +38,7 @@
                     <h3 class="text-2xl font-bold mb-2">Halo, {{ Auth::user()->name }}!</h3>
                     <p class="text-red-100 opacity-90">Butuh bantuan apa hari ini? Mitra kami siap membantu Anda.</p>
                     <div class="mt-6">
-                        <a href="#" class="inline-flex items-center px-6 py-3 bg-white text-mtm-red rounded-full font-bold shadow-lg hover:bg-gray-100 transition-all">
+                        <a href="{{ route('tasks.create') }}" class="inline-flex items-center px-6 py-3 bg-white text-mtm-red rounded-full font-bold shadow-lg hover:bg-gray-100 transition-all">
                             Buat Tugas Baru
                         </a>
                     </div>
@@ -54,32 +54,32 @@
                 <div class="md:col-span-2 space-y-6">
                     <div class="flex items-center justify-between">
                         <h4 class="text-lg font-bold text-gray-900 dark:text-white font-poppins">Tugas Aktif</h4>
-                        <a href="#" class="text-sm text-mtm-red hover:underline">Lihat Semua</a>
+                        <a href="{{ route('tasks.index') }}" class="text-sm text-mtm-red hover:underline">Lihat Semua</a>
                     </div>
 
                     @forelse($active_tasks as $task)
-                        <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all">
+                        <a href="{{ route('tasks.show', $task) }}" class="block bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:scale-[1.005] transition-all">
                             <div class="flex items-start justify-between mb-4">
                                 <div>
                                     <span class="inline-block px-3 py-1 bg-red-50 dark:bg-red-950/20 text-mtm-red text-[10px] font-bold rounded-full mb-2 uppercase">
                                         {{ $task->category->name }}
                                     </span>
-                                    <h5 class="font-bold text-lg">{{ $task->title }}</h5>
+                                    <h5 class="font-bold text-lg text-gray-900 dark:text-white">{{ $task->title }}</h5>
                                 </div>
                                 <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">
                                     {{ ucfirst(str_replace('_', ' ', $task->status)) }}
                                 </span>
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{{ $task->description }}</p>
+                            <p class="text-sm text-gray-650 dark:text-gray-400 mb-4 line-clamp-2">{{ $task->description }}</p>
                             <div class="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-gray-800">
                                 <div class="text-sm font-bold text-mtm-red">
                                     Rp {{ number_format($task->budget, 0, ',', '.') }}
                                 </div>
-                                <div class="text-xs text-gray-500">
+                                <div class="text-xs text-gray-550 dark:text-gray-450">
                                     {{ $task->bids->count() }} Penawaran
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @empty
                         <div class="bg-gray-50 dark:bg-mtm-dark/50 p-12 rounded-3xl text-center border-2 border-dashed border-gray-200 dark:border-gray-800">
                             <p class="text-gray-500">Belum ada tugas aktif.</p>
@@ -93,12 +93,12 @@
                     <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
                         <div class="space-y-6">
                             @forelse($task_history as $history)
-                                <div class="flex gap-4">
+                                <a href="{{ route('tasks.show', $history) }}" class="flex gap-4 hover:opacity-85 transition-opacity">
                                     <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-bold truncate w-40">{{ $history->title }}</p>
+                                        <p class="text-sm font-bold text-gray-800 dark:text-gray-200 truncate w-40">{{ $history->title }}</p>
                                         <p class="text-[10px] text-gray-500">{{ $history->created_at->diffForHumans() }}</p>
                                     </div>
                                     <div class="ml-auto">
@@ -106,7 +106,7 @@
                                             {{ strtoupper($history->status) }}
                                         </span>
                                     </div>
-                                </div>
+                                </a>
                             @empty
                                 <p class="text-sm text-gray-500 text-center py-4">Belum ada riwayat.</p>
                             @endforelse

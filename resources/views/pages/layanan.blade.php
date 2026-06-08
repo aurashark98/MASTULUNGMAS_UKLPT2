@@ -30,7 +30,7 @@
             @else
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($categories as $category)
-                        <div class="group glass-card p-10 rounded-[3rem] hover:border-mtm-red/50 hover:shadow-mtm-red/10 cursor-pointer"
+                        <a href="{{ route('tasks.create', ['category_id' => $category->id]) }}" class="block group glass-card p-10 rounded-[3rem] hover:border-mtm-red/50 hover:shadow-mtm-red/10 transition-all"
                              x-data="{ shown: false }" x-init="setTimeout(() => shown = true, {{ $loop->index * 100 + 300 }})">
                             
                             <div class="w-20 h-20 bg-mtm-red/10 rounded-3xl flex items-center justify-center text-mtm-red mb-10 group-hover:bg-mtm-red group-hover:text-white group-hover:rotate-12 transition-all duration-500">
@@ -39,8 +39,8 @@
                                 </svg>
                             </div>
                             
-                            <h4 class="text-2xl font-black mb-4 group-hover:text-mtm-red transition-colors">{{ $category->name }}</h4>
-                            <p class="text-gray-600 dark:text-gray-300 font-medium text-sm leading-relaxed mb-8">
+                            <h4 class="text-2xl font-black mb-4 text-gray-900 dark:text-white group-hover:text-mtm-red transition-colors">{{ $category->name }}</h4>
+                            <p class="text-gray-650 dark:text-gray-300 font-medium text-sm leading-relaxed mb-8">
                                 {{ $category->description }}
                             </p>
                             
@@ -48,7 +48,7 @@
                                 Pesan Sekarang
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             @endif

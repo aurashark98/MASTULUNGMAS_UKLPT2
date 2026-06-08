@@ -9,6 +9,43 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Task::query();
+
+        if (Auth::user()->role === 'admin') {
+            // Admin sees all
+        } elseif (Auth::user()->role === 'mitra') {
+            // Mitra sees open tasks
+            $query->whereIn('status', ['waiting_for_bid', 'bid_received']);
+        } else {
+            // User sees their own tasks
+            $query->where('user_id', Auth::id());
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tasks = $query->with('category', 'user')->latest()->paginate(10);
+        $categories = ServiceCategory::all();
+
+        return view('tasks.index', compact('tasks', 'categories'));
+    }
+
     public function create()
     {
         $categories = ServiceCategory::all();
@@ -21,10 +58,25 @@ class TaskController extends Controller
             'category_id' => 'required|exists:service_categories,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'budget' => 'required|numeric|min:0',
             'location' => 'required|string',
+            'destination_location' => 'nullable|string',
+            'distance' => 'required|numeric|min:0',
+            'duration' => 'required|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        $category = \App\Models\ServiceCategory::find($request->category_id);
+        $slug = $category ? $category->slug : 'default';
+        
+        $basePrice = 15000;
+        if (str_contains($slug, 'antre')) $basePrice = 15000;
+        elseif (str_contains($slug, 'bersih') || str_contains($slug, 'cleaning')) $basePrice = 25000;
+        elseif (str_contains($slug, 'kirim') || str_contains($slug, 'kurir') || str_contains($slug, 'delivery')) $basePrice = 15000;
+        elseif (str_contains($slug, 'belanja') || str_contains($slug, 'shopper')) $basePrice = 20000;
+        
+        $distance = floatval($request->distance);
+        $duration = intval($request->duration);
+        $calculatedBudget = $basePrice + ($distance * 3000) + ($duration * 10000);
 
         $images = [];
         if ($request->hasFile('images')) {
@@ -34,23 +86,106 @@ class TaskController extends Controller
             }
         }
 
-        Task::create([
+        $task = Task::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
             'title' => $request->title,
             'description' => $request->description,
-            'budget' => $request->budget,
+            'budget' => $calculatedBudget,
             'location' => $request->location,
+            'destination_location' => $request->destination_location,
+            'distance' => $distance,
+            'duration' => $duration,
             'images' => $images,
             'status' => 'waiting_for_bid',
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Tugas berhasil dibuat!');
+        \App\Models\ActivityLog::log('Task Creation', "Membuat tugas baru '{$request->title}' (ID: {$task->id})");
+
+        return redirect()->route('tasks.show', $task)->with('success', 'Tugas berhasil dibuat!');
     }
 
     public function show(Task $task)
     {
-        $task->load('user', 'category', 'bids.mitra');
+        $task->load('user', 'category', 'bids.mitra', 'assignment.mitra', 'payment', 'review');
         return view('tasks.show', compact('task'));
+    }
+
+    public function edit(Task $task)
+    {
+        if (Auth::id() !== $task->user_id) {
+            abort(403);
+        }
+        $categories = ServiceCategory::all();
+        return view('tasks.edit', compact('task', 'categories'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        if (Auth::id() !== $task->user_id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'category_id' => 'required|exists:service_categories,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string',
+            'destination_location' => 'nullable|string',
+            'distance' => 'required|numeric|min:0',
+            'duration' => 'required|integer|min:1',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $category = \App\Models\ServiceCategory::find($request->category_id);
+        $slug = $category ? $category->slug : 'default';
+        
+        $basePrice = 15000;
+        if (str_contains($slug, 'antre')) $basePrice = 15000;
+        elseif (str_contains($slug, 'bersih') || str_contains($slug, 'cleaning')) $basePrice = 25000;
+        elseif (str_contains($slug, 'kirim') || str_contains($slug, 'kurir') || str_contains($slug, 'delivery')) $basePrice = 15000;
+        elseif (str_contains($slug, 'belanja') || str_contains($slug, 'shopper')) $basePrice = 20000;
+        
+        $distance = floatval($request->distance);
+        $duration = intval($request->duration);
+        $calculatedBudget = $basePrice + ($distance * 3000) + ($duration * 10000);
+
+        $images = $task->images ?? [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('tasks', 'public');
+                $images[] = $path;
+            }
+        }
+
+        $task->update([
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'budget' => $calculatedBudget,
+            'location' => $request->location,
+            'destination_location' => $request->destination_location,
+            'distance' => $distance,
+            'duration' => $duration,
+            'images' => $images,
+        ]);
+
+        \App\Models\ActivityLog::log('Task Update', "Mengubah tugas '{$task->title}' (ID: {$task->id})");
+
+        return redirect()->route('tasks.show', $task)->with('success', 'Tugas berhasil diperbarui!');
+    }
+
+    public function destroy(Task $task)
+    {
+        if (Auth::id() !== $task->user_id && Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $title = $task->title;
+        $task->delete();
+
+        \App\Models\ActivityLog::log('Task Delete', "Menghapus tugas '{$title}'");
+
+        return redirect()->route('dashboard')->with('success', 'Tugas berhasil dihapus!');
     }
 }

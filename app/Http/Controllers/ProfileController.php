@@ -173,4 +173,48 @@ class ProfileController extends Controller
             return response()->json($responseData);
         }
     }
+
+    /**
+     * Update the Mitra's profile details.
+     */
+    public function updateMitraProfile(Request $request)
+    {
+        $user = $request->user();
+        $profile = $user->mitraProfile;
+
+        if (!$profile) {
+            return redirect()->back()->with('error', 'Profil Mitra tidak ditemukan.');
+        }
+
+        $request->validate([
+            'bio' => ['required', 'string', 'min:10'],
+            'skills' => ['required', 'array', 'min:1'],
+            'skills.*' => ['string'],
+            'service_area' => ['nullable', 'string', 'max:255'],
+            'service_radius' => ['nullable', 'integer', 'min:1'],
+            'operational_hours' => ['nullable', 'string', 'max:255'],
+            'portfolio_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg|max:2048'],
+        ]);
+
+        $portfolio = $profile->portfolio_images ?? [];
+        if ($request->hasFile('portfolio_images')) {
+            foreach ($request->file('portfolio_images') as $file) {
+                $path = $file->store('mitra/portfolio', 'public');
+                $portfolio[] = $path;
+            }
+        }
+
+        $profile->update([
+            'bio' => $request->bio,
+            'skills' => $request->skills,
+            'service_area' => $request->service_area,
+            'service_radius' => $request->service_radius,
+            'operational_hours' => $request->operational_hours,
+            'portfolio_images' => $portfolio,
+        ]);
+
+        \App\Models\ActivityLog::log('Mitra Profile Update', "Memperbarui info profil mitra");
+
+        return redirect()->route('profile.edit')->with('success', 'Profil Mitra berhasil diperbarui!');
+    }
 }

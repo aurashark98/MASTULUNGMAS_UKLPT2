@@ -16,7 +16,7 @@ class BidController extends Controller
             'message' => 'nullable|string',
         ]);
 
-        TaskBid::create([
+        $bid = TaskBid::create([
             'task_id' => $task->id,
             'mitra_id' => Auth::id(),
             'bid_amount' => $request->bid_amount,
@@ -28,6 +28,17 @@ class BidController extends Controller
         if ($task->status === 'waiting_for_bid') {
             $task->update(['status' => 'bid_received']);
         }
+
+        // Log Activity
+        \App\Models\ActivityLog::log('Bid Submission', "Mengirim penawaran sebesar Rp " . number_format($request->bid_amount, 0, ',', '.') . " untuk tugas '{$task->title}'");
+
+        // Notify Task Owner
+        $task->user->sendNotification(
+            'new_bid',
+            'Penawaran Baru',
+            "Mitra " . Auth::user()->name . " mengirimkan penawaran untuk tugas '{$task->title}'",
+            route('tasks.show', $task)
+        );
 
         return redirect()->route('tasks.show', $task)->with('success', 'Penawaran berhasil dikirim!');
     }
@@ -53,6 +64,32 @@ class BidController extends Controller
             'mitra_id' => $bid->mitra_id,
             'assigned_at' => now(),
         ]);
+
+        // Create Chat Room automatically
+        \App\Models\ChatRoom::firstOrCreate([
+            'task_id' => $task->id,
+            'user_id' => $task->user_id,
+            'mitra_id' => $bid->mitra_id,
+        ]);
+
+        // Log Activity
+        \App\Models\ActivityLog::log('Bid Acceptance', "Menerima penawaran dari Mitra {$bid->mitra->name} untuk tugas '{$task->title}'");
+
+        // Notify Mitra
+        $bid->mitra->sendNotification(
+            'bid_accepted',
+            'Penawaran Diterima',
+            "Penawaran Anda untuk tugas '{$task->title}' telah diterima. Silakan mulai pengerjaan.",
+            route('tasks.show', $task)
+        );
+
+        // Notify Task Owner (Task Assigned)
+        Auth::user()->sendNotification(
+            'task_assigned',
+            'Tugas Ditugaskan',
+            "Tugas '{$task->title}' telah berhasil ditugaskan ke Mitra {$bid->mitra->name}.",
+            route('tasks.show', $task)
+        );
 
         return redirect()->route('tasks.show', $task)->with('success', 'Penawaran diterima!');
     }

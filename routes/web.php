@@ -16,8 +16,15 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/tasks/create', [App\Http\Controllers\TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
-    Route::get('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'show'])->name('tasks.show');
+    Route::get('/tasks/{task}/edit', [App\Http\Controllers\TaskController::class, 'edit'])->name('tasks.edit');
+    Route::patch('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/bids/{bid}/accept', [App\Http\Controllers\BidController::class, 'accept'])->name('bids.accept');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/tasks', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'show'])->name('tasks.show');
 });
 
 // Mitra Dashboard
@@ -55,10 +62,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/register-mitra', [ProfileController::class, 'showRegisterMitra'])->name('profile.register-mitra');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/mitra', [ProfileController::class, 'updateMitraProfile'])->name('profile.mitra.update');
     Route::post('/profile/password/send-otp', [ProfileController::class, 'sendPasswordOTP'])->name('profile.password.send-otp');
     Route::post('/profile/upgrade', [ProfileController::class, 'upgradeToMitra'])->name('profile.upgrade');
     Route::post('/profile/switch-role', [ProfileController::class, 'switchRole'])->name('profile.switch-role');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Chat Routes
+    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{chatRoom}', [App\Http\Controllers\ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{chatRoom}/messages', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.messages.store');
+
+    // Payment Routes
+    Route::get('/tasks/{task}/pay', [App\Http\Controllers\PaymentController::class, 'showPaymentPage'])->name('tasks.pay');
+    Route::post('/tasks/{task}/pay', [App\Http\Controllers\PaymentController::class, 'processPayment'])->name('tasks.pay.process');
+
+    // Review Routes
+    Route::post('/tasks/{task}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('tasks.review.store');
+
+    // Notification Routes
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 });
 
 // Google Authentication Routes

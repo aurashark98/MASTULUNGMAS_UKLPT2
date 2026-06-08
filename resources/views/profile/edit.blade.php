@@ -35,7 +35,7 @@
             </div>
         @endif
 
-        <div class="space-y-8" x-data="{ currentTab: '{{ $errors->updatePassword->any() ? 'keamanan' : 'akun' }}' }">
+        <div class="space-y-8" x-data="{ currentTab: '{{ $errors->updatePassword->any() ? 'keamanan' : ($errors->any() && old('skills') ? 'mitra' : 'akun') }}' }">
             
             <!-- Custom Tab Dropdown (Responsive) -->
             <div class="mb-8 relative" x-data="{ dropdownOpen: false }">
@@ -52,6 +52,12 @@
                                 <svg class="w-5 h-5 text-mtm-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 Keamanan
                             </span>
+                            @if($user->mitraProfile && $user->mitraProfile->is_verified)
+                            <span x-show="currentTab === 'mitra'" class="flex items-center gap-2" x-cloak>
+                                <svg class="w-5 h-5 text-mtm-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                Profil Mitra
+                            </span>
+                            @endif
                         </span>
                         <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -81,6 +87,14 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             Keamanan
                         </button>
+                        @if($user->mitraProfile && $user->mitraProfile->is_verified)
+                        <button @click="currentTab = 'mitra'; dropdownOpen = false" 
+                                class="w-full flex items-center gap-3 px-6 py-4 text-left text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                :class="currentTab === 'mitra' ? 'text-mtm-red bg-red-500/5' : ''">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            Profil Mitra
+                        </button>
+                        @endif
                     </div>
                 </div>
 
@@ -98,6 +112,14 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         Keamanan
                     </button>
+                    @if($user->mitraProfile && $user->mitraProfile->is_verified)
+                    <button @click="currentTab = 'mitra'" 
+                            class="px-6 pb-4 text-sm font-black transition-all flex items-center gap-2 border-b-2"
+                            :class="currentTab === 'mitra' ? 'text-mtm-red border-mtm-red' : 'text-gray-400 border-transparent hover:text-gray-600 dark:hover:text-gray-300'">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Profil Mitra
+                    </button>
+                    @endif
                 </div>
             </div>
 
@@ -267,6 +289,95 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tab Content: Mitra -->
+            @if($user->mitraProfile && $user->mitraProfile->is_verified)
+            <div x-show="currentTab === 'mitra'" class="space-y-8" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                <div class="glass-card rounded-[2.5rem] p-8 md:p-10 shadow-xl border border-gray-200 dark:border-white/5 bg-white dark:bg-mtm-dark-surface/40 backdrop-blur-md">
+                    <div class="max-w-2xl">
+                        <form method="post" action="{{ route('profile.mitra.update') }}" enctype="multipart/form-data" class="space-y-6">
+                            @csrf
+                            @method('patch')
+
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white font-poppins">Detail Profil Mitra</h3>
+                                <p class="text-xs text-gray-500 mt-1 font-medium">Perbarui informasi profil profesional Anda sebagai Mitra MTM.</p>
+                            </div>
+
+                            <!-- Bio -->
+                            <div>
+                                <x-input-label for="mitra_bio" :value="__('Bio / Deskripsi Keahlian')" />
+                                <textarea id="mitra_bio" name="bio" rows="4" class="mt-1 block w-full border-gray-300 dark:border-white/10 dark:bg-black/20 dark:text-gray-300 focus:border-mtm-red dark:focus:border-mtm-red focus:ring-mtm-red dark:focus:ring-mtm-red rounded-2xl shadow-sm text-sm" required>{{ old('bio', $user->mitraProfile->bio) }}</textarea>
+                                <x-input-error class="mt-2" :messages="$errors->get('bio')" />
+                            </div>
+
+                            <!-- Skills -->
+                            <div>
+                                <x-input-label :value="__('Bidang Keahlian / Kategori Jasa')" />
+                                <div class="grid grid-cols-2 gap-4 mt-2">
+                                    @foreach($categories as $category)
+                                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                                            <input type="checkbox" name="skills[]" value="{{ $category->name }}" 
+                                                class="rounded dark:bg-black/20 border-gray-300 dark:border-white/10 text-mtm-red focus:ring-mtm-red"
+                                                @checked(in_array($category->name, old('skills', $user->mitraProfile->skills ?? [])))>
+                                            <span>{{ $category->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                <x-input-error class="mt-2" :messages="$errors->get('skills')" />
+                            </div>
+
+                            <!-- Service Area & Service Radius -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <x-input-label for="service_area" :value="__('Area Layanan')" />
+                                    <x-text-input id="service_area" name="service_area" type="text" class="mt-1 block w-full" :value="old('service_area', $user->mitraProfile->service_area)" placeholder="Contoh: Malang Kota, Lowokwaru" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('service_area')" />
+                                </div>
+                                <div>
+                                    <x-input-label for="service_radius" :value="__('Radius Layanan (km)')" />
+                                    <x-text-input id="service_radius" name="service_radius" type="number" class="mt-1 block w-full" :value="old('service_radius', $user->mitraProfile->service_radius)" placeholder="Contoh: 10" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('service_radius')" />
+                                </div>
+                            </div>
+
+                            <!-- Operational Hours -->
+                            <div>
+                                <x-input-label for="operational_hours" :value="__('Jam Operasional')" />
+                                <x-text-input id="operational_hours" name="operational_hours" type="text" class="mt-1 block w-full" :value="old('operational_hours', $user->mitraProfile->operational_hours)" placeholder="Contoh: Senin - Sabtu (08:00 - 17:00)" />
+                                <x-input-error class="mt-2" :messages="$errors->get('operational_hours')" />
+                            </div>
+
+                            <!-- Portfolio Images -->
+                            <div>
+                                <x-input-label for="portfolio_images" :value="__('Unggah Gambar Portofolio (Bisa Pilih Banyak)')" />
+                                <input type="file" id="portfolio_images" name="portfolio_images[]" multiple class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-red-50 dark:file:bg-red-950/20 file:text-mtm-red hover:file:bg-red-100 dark:hover:file:bg-red-950/40" accept="image/*">
+                                <x-input-error class="mt-2" :messages="$errors->get('portfolio_images.*')" />
+                                
+                                @if($user->mitraProfile->portfolio_images)
+                                    <div class="mt-4">
+                                        <p class="text-xs text-gray-400 font-bold mb-2">Portofolio Saat Ini:</p>
+                                        <div class="grid grid-cols-4 gap-3">
+                                            @foreach($user->mitraProfile->portfolio_images as $img)
+                                                <div class="relative group aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-white/5">
+                                                    <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="flex items-center gap-4 pt-4 border-t border-gray-150 dark:border-white/5">
+                                <x-primary-button class="bg-gradient-to-r from-mtm-red to-mtm-red-dark hover:shadow-mtm-red/25 px-8 py-3.5 !text-sm">
+                                    {{ __('Simpan Perubahan') }}
+                                </x-primary-button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

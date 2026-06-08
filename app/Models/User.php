@@ -108,4 +108,23 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function sendNotification($type, $title, $message, $url = null)
+    {
+        return \Illuminate\Support\Facades\DB::table('notifications')->insert([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\Notifications\MTMNotification',
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $this->id,
+            'data' => json_encode([
+                'type' => $type,
+                'title' => $title,
+                'message' => $message,
+                'url' => $url,
+            ]),
+            'read_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 }

@@ -3,7 +3,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
                     <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Total Pengguna</p>
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_users'] }}</h3>
@@ -17,8 +17,20 @@
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_tasks'] }}</h3>
                 </div>
                 <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
-                    <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Total Transaksi</p>
+                    <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Tugas Selesai</p>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_completed_tasks'] }}</h3>
+                </div>
+                <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                    <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Jumlah Transaksi</p>
+                    <h3 class="text-2xl font-bold text-[#10B981]">{{ $stats['total_transactions'] }}</h3>
+                </div>
+                <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                    <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Total Transaksi (Rp)</p>
                     <h3 class="text-2xl font-bold text-mtm-red">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</h3>
+                </div>
+                <div class="bg-white dark:bg-mtm-dark-surface p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                    <p class="text-xs text-gray-500 mb-1 uppercase font-bold">Rata-Rata Rating</p>
+                    <h3 class="text-2xl font-bold text-amber-500">★ {{ number_format($stats['average_rating'], 1) }}</h3>
                 </div>
             </div>
 
