@@ -13,6 +13,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\PhoneVerificationController;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/layanan', [PageController::class, 'layanan'])->name('layanan');
@@ -24,6 +25,10 @@ Route::get('/partners', [PartnerController::class, 'index'])->name('partners.ind
 Route::middleware('auth')->group(function () {
     Route::post('/partners/{partner}/favorite', [PartnerController::class, 'toggleFavorite'])->name('partners.favorite');
     Route::get('/favorites', [PartnerController::class, 'favorites'])->name('partners.favorites');
+
+    // Phone Verification
+    Route::post('/phone/send-otp', [PhoneVerificationController::class, 'sendOtp'])->name('phone.send-otp');
+    Route::post('/phone/verify-otp', [PhoneVerificationController::class, 'verifyOtp'])->name('phone.verify-otp');
 });
 
 // User Dashboard (Default Breeze dashboard renamed/redirected)

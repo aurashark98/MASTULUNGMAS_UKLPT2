@@ -120,17 +120,35 @@
             </div>
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
-            <!-- Nomor HP -->
-            <div class="space-y-2">
-                <x-input-label for="phone_number" :value="__('Nomor HP')" class="text-xs font-bold uppercase tracking-widest text-gray-500" />
-                <div class="relative group">
+        <!-- Nomor HP & Verification -->
+        <div class="space-y-4">
+            <x-input-label for="phone_number" :value="__('Nomor HP')" class="text-xs font-bold uppercase tracking-widest text-gray-500" />
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative group">
                     <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-mtm-red transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                     </div>
                     <x-text-input id="phone_number" name="phone_number" type="text" class="block w-full !pl-12 !py-4 bg-gray-50/50 dark:bg-[#121212]/30 border-gray-100 dark:border-white/5 rounded-2xl" :value="old('phone_number', $user->phone_number)" placeholder="081234567890" />
                 </div>
-                <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+                
+                <div class="flex items-center">
+                    @if($user->phone_verified_at)
+                        <span class="inline-flex items-center px-4 py-2 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-xl text-xs font-black uppercase tracking-widest border border-green-100 dark:border-green-500/20">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Terverifikasi
+                        </span>
+                    @elseif($user->phone_number)
+                        <button type="button" 
+                                x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'verify-phone')"
+                                class="inline-flex items-center px-6 py-4 bg-mtm-red text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg hover:bg-mtm-red-dark transition-all active:scale-95">
+                            {{ __('Verifikasi Sekarang') }}
+                        </button>
+                    @endif
+                </div>
             </div>
+            <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+        </div>
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div class="mt-4 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30">
@@ -171,4 +189,55 @@
             @endif
         </div>
     </form>
+
+    <!-- OTP Verification Modal -->
+    <x-modal name="verify-phone" focusable>
+        <div class="p-8">
+            <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-4 font-poppins">Verifikasi Nomor HP</h2>
+            
+            <div x-data="{ step: 'send', phoneNumber: '{{ $user->phone_number }}', cooldown: 0 }">
+                <!-- Step 1: Send OTP -->
+                <div x-show="step === 'send'" class="space-y-6">
+                    <p class="text-sm text-gray-500 leading-relaxed">Kami akan mengirimkan 6 digit kode OTP ke nomor <span class="font-bold text-gray-900 dark:text-white" x-text="phoneNumber"></span> via SMS.</p>
+                    
+                    <form action="{{ route('phone.send-otp') }}" method="POST" @submit.prevent="
+                        $el.submit();
+                        step = 'verify';
+                    ">
+                        @csrf
+                        <input type="hidden" name="phone_number" :value="phoneNumber">
+                        <x-danger-button class="w-full justify-center py-4 bg-mtm-red hover:bg-mtm-red-dark">
+                            {{ __('Kirim Kode OTP') }}
+                        </x-danger-button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Verify OTP -->
+                <div x-show="step === 'verify'" class="space-y-6">
+                    <p class="text-sm text-gray-500 leading-relaxed">Masukkan 6 digit kode OTP yang telah dikirimkan ke nomor Anda.</p>
+                    
+                    <form action="{{ route('phone.verify-otp') }}" method="POST">
+                        @csrf
+                        <div class="space-y-4">
+                            <x-text-input id="otp" name="otp" type="text" class="block w-full text-center text-2xl font-black tracking-[1rem] !py-4" maxlength="6" required autofocus placeholder="000000" />
+                            
+                            <x-danger-button class="w-full justify-center py-4 bg-mtm-red hover:bg-mtm-red-dark">
+                                {{ __('Verifikasi Kode') }}
+                            </x-danger-button>
+                        </div>
+                    </form>
+
+                    <div class="pt-4 text-center">
+                        <form action="{{ route('phone.send-otp') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="phone_number" :value="phoneNumber">
+                            <button type="submit" class="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-mtm-red transition-colors">
+                                {{ __('Kirim Ulang OTP') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </x-modal>
 </section>
