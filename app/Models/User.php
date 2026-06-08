@@ -95,6 +95,19 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'favorite_partners', 'partner_id', 'user_id')->withTimestamps();
     }
 
+    public function notificationSettings()
+    {
+        return $this->hasMany(NotificationSetting::class);
+    }
+
+    public function getNotificationSetting(string $type)
+    {
+        return $this->notificationSettings()->firstOrCreate(
+            ['type' => $type],
+            ['email_enabled' => true, 'database_enabled' => true]
+        );
+    }
+
     /**
      * Level System
      */

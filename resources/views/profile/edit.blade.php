@@ -58,6 +58,10 @@
                                 Profil Mitra
                             </span>
                             @endif
+                            <span x-show="currentTab === 'notifikasi'" class="flex items-center gap-2" x-cloak>
+                                <svg class="w-5 h-5 text-mtm-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                                Notifikasi
+                            </span>
                         </span>
                         <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -95,6 +99,12 @@
                             Profil Mitra
                         </button>
                         @endif
+                        <button @click="currentTab = 'notifikasi'; dropdownOpen = false" 
+                                class="w-full flex items-center gap-3 px-6 py-4 text-left text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                :class="currentTab === 'notifikasi' ? 'text-mtm-red bg-red-500/5' : ''">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            Notifikasi
+                        </button>
                     </div>
                 </div>
 
@@ -120,6 +130,12 @@
                         Profil Mitra
                     </button>
                     @endif
+                    <button @click="currentTab = 'notifikasi'" 
+                            class="px-6 pb-4 text-sm font-black transition-all flex items-center gap-2 border-b-2"
+                            :class="currentTab === 'notifikasi' ? 'text-mtm-red border-mtm-red' : 'text-gray-400 border-transparent hover:text-gray-600 dark:hover:text-gray-300'">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        Notifikasi
+                    </button>
                 </div>
             </div>
 
@@ -377,7 +393,49 @@
                     </div>
                 </div>
             </div>
-            @endif
+            @endif<!-- Notification Preferences -->
+                <div x-show="currentTab === 'notifikasi'" class="space-y-12" x-cloak>
+                    <div class="bg-white dark:bg-mtm-dark-surface p-8 md:p-12 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm">
+                        <header class="mb-10">
+                            <h3 class="text-2xl font-black text-gray-900 dark:text-white font-poppins">Preferensi Notifikasi</h3>
+                            <p class="mt-2 text-sm text-gray-500">Pilih bagaimana Anda ingin menerima pembaruan dari platform.</p>
+                        </header>
+
+                        <form method="post" action="{{ route('notification-settings.update') }}" class="space-y-8">
+                            @csrf
+                            @method('patch')
+
+                            <div class="divide-y divide-gray-50 dark:divide-white/5">
+                                @foreach(\App\Models\NotificationSetting::availableTypes() as $key => $label)
+                                    @php
+                                        $setting = Auth::user()->getNotificationSetting($key);
+                                    @endphp
+                                    <div class="py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div>
+                                            <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">{{ $label }}</h4>
+                                            <p class="text-xs text-gray-500 mt-1">Terima pemberitahuan saat terjadi {{ strtolower($label) }}.</p>
+                                        </div>
+                                        <div class="flex items-center gap-6">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" name="notif_{{ $key }}_db" value="1" {{ $setting->database_enabled ? 'checked' : '' }} class="rounded text-mtm-red focus:ring-mtm-red">
+                                                <span class="ml-2 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase">Aplikasi</span>
+                                            </label>
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" name="notif_{{ $key }}_email" value="1" {{ $setting->email_enabled ? 'checked' : '' }} class="rounded text-mtm-red focus:ring-mtm-red">
+                                                <span class="ml-2 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase">Email</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <div class="pt-6 border-t border-gray-50 dark:border-white/5">
+                                <x-primary-button class="px-8 py-3.5">{{ __('Simpan Preferensi') }}</x-primary-button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

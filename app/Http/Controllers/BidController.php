@@ -33,12 +33,7 @@ class BidController extends Controller
         \App\Models\ActivityLog::log('Bid Submission', "Mengirim penawaran sebesar Rp " . number_format($request->bid_amount, 0, ',', '.') . " untuk tugas '{$task->title}'");
 
         // Notify Task Owner
-        $task->user->sendNotification(
-            'new_bid',
-            'Penawaran Baru',
-            "Mitra " . Auth::user()->name . " mengirimkan penawaran untuk tugas '{$task->title}'",
-            route('tasks.show', $task)
-        );
+        $task->user->notify(new \App\Notifications\NewBidNotification($bid));
 
         return redirect()->route('tasks.show', $task)->with('success', 'Penawaran berhasil dikirim!');
     }
@@ -76,20 +71,7 @@ class BidController extends Controller
         \App\Models\ActivityLog::log('Bid Acceptance', "Menerima penawaran dari Mitra {$bid->mitra->name} untuk tugas '{$task->title}'");
 
         // Notify Mitra
-        $bid->mitra->sendNotification(
-            'bid_accepted',
-            'Penawaran Diterima',
-            "Penawaran Anda untuk tugas '{$task->title}' telah diterima. Silakan mulai pengerjaan.",
-            route('tasks.show', $task)
-        );
-
-        // Notify Task Owner (Task Assigned)
-        Auth::user()->sendNotification(
-            'task_assigned',
-            'Tugas Ditugaskan',
-            "Tugas '{$task->title}' telah berhasil ditugaskan ke Mitra {$bid->mitra->name}.",
-            route('tasks.show', $task)
-        );
+        $bid->mitra->notify(new \App\Notifications\BidAcceptedNotification($bid));
 
         return redirect()->route('tasks.show', $task)->with('success', 'Penawaran diterima!');
     }
