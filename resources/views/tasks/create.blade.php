@@ -51,7 +51,10 @@
 
                     <!-- Premium Price Breakdown Box -->
                     <div class="bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 space-y-3">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Rincian Estimasi Harga Layanan (Kalkulator MTM)</h4>
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Rincian Estimasi Harga Layanan (Kalkulator MTM)</h4>
+                            <span id="lbl-surge-badge" class="hidden text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse"></span>
+                        </div>
                         <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
                             <span>Tarif Dasar Kategori:</span>
                             <span id="lbl-base-price" class="font-semibold">Rp 15.000</span>
@@ -63,6 +66,10 @@
                         <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
                             <span>Biaya Durasi Pengerjaan:</span>
                             <span id="lbl-duration-fee" class="font-semibold">Rp 10.000</span>
+                        </div>
+                        <div id="surge-row" class="hidden flex justify-between text-sm text-orange-500 dark:text-orange-400">
+                            <span id="lbl-surge-label">Biaya Jam Sibuk:</span>
+                            <span id="lbl-surge-fee" class="font-bold">Rp 0</span>
                         </div>
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between items-center">
                             <span class="text-base font-bold text-gray-800 dark:text-gray-100">Total Biaya Tugas:</span>
@@ -143,6 +150,27 @@
     </div>
 
 <script>
+// === MTM Surge Pricing (Ala Gojek) ===
+function getSurgePricing() {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    // Rush hour pagi: 07:00 - 09:00
+    if (hour >= 7 && hour < 9) {
+        return { multiplier: 1.3, label: '🔴 Jam Sibuk Pagi (07–09)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
+    }
+    // Rush hour sore: 16:00 - 19:00
+    if (hour >= 16 && hour < 19) {
+        return { multiplier: 1.3, label: '🔴 Jam Sibuk Sore (16–19)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
+    }
+    // Malam larut: 22:00 - 05:00
+    if (hour >= 22 || hour < 5) {
+        return { multiplier: 1.2, label: '🌙 Malam Larut (22–05)', badgeClass: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400', badge: '🌙 Malam Larut ×1.2' };
+    }
+    // Normal
+    return { multiplier: 1.0, label: null, badgeClass: '', badge: null };
+}
+
 window.updatePrice = function() {
     const categorySelect = document.getElementById('category_id');
     const distanceInput = document.getElementById('distance');
@@ -164,12 +192,39 @@ window.updatePrice = function() {
     
     const distanceFee = distance * 3000;
     const durationFee = duration * 10000;
-    const total = basePrice + distanceFee + durationFee;
+    const subtotal = basePrice + distanceFee + durationFee;
     
+    // Surge pricing
+    const surge = getSurgePricing();
+    const surgeFee = Math.round(subtotal * (surge.multiplier - 1));
+    const total = subtotal + surgeFee;
+    
+    // Update labels
     document.getElementById('lbl-base-price').innerText = 'Rp ' + basePrice.toLocaleString('id-ID');
     document.getElementById('lbl-distance-fee').innerText = 'Rp ' + distanceFee.toLocaleString('id-ID');
     document.getElementById('lbl-duration-fee').innerText = 'Rp ' + durationFee.toLocaleString('id-ID');
     document.getElementById('lbl-total-price').innerText = 'Rp ' + total.toLocaleString('id-ID');
+    
+    // Surge badge & row
+    const surgeRow = document.getElementById('surge-row');
+    const surgeBadge = document.getElementById('lbl-surge-badge');
+    const surgeLabelEl = document.getElementById('lbl-surge-label');
+    const surgeFeeEl = document.getElementById('lbl-surge-fee');
+    
+    if (surge.multiplier > 1) {
+        surgeRow.classList.remove('hidden');
+        surgeRow.classList.add('flex');
+        surgeLabelEl.innerText = 'Biaya ' + surge.label + ':';
+        surgeFeeEl.innerText = 'Rp ' + surgeFee.toLocaleString('id-ID');
+        
+        surgeBadge.classList.remove('hidden');
+        surgeBadge.className = 'text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse ' + surge.badgeClass;
+        surgeBadge.innerText = surge.badge;
+    } else {
+        surgeRow.classList.add('hidden');
+        surgeRow.classList.remove('flex');
+        surgeBadge.classList.add('hidden');
+    }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
