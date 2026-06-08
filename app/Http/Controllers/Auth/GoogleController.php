@@ -123,7 +123,8 @@ class GoogleController extends Controller
         if ($user->role === 'admin') {
             return route('admin.dashboard');
         } elseif ($user->role === 'mitra') {
-            return route('mitra.dashboard');
+            $user->update(['role' => 'user']);
+            return route('dashboard');
         }
         return route('dashboard');
     }

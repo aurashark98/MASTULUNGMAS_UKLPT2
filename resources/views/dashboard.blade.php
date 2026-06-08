@@ -7,6 +7,31 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+            <!-- Congratulations Banner for Accepted Mitra -->
+            @if(Auth::user()->mitraProfile && Auth::user()->mitraProfile->is_verified)
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 overflow-hidden shadow-xl sm:rounded-3xl p-6 text-white animate-fade-in border border-amber-400/20">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+                            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white border border-white/20 shadow-inner">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-black font-poppins">Selamat bergabung menjadi mitra mtm!</h4>
+                                <p class="text-xs text-amber-100 font-medium">Akun kemitraan Anda telah disetujui. Beralihlah ke mode kerja untuk mulai menerima tawaran tugas.</p>
+                            </div>
+                        </div>
+                        <form method="POST" action="{{ route('profile.switch-role') }}">
+                            @csrf
+                            <button type="submit" class="px-6 py-2.5 bg-white text-amber-600 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg hover:bg-gray-100 transition-all cursor-pointer">
+                                Beralih ke Mode Mitra
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
             <!-- Welcome Card -->
             <div class="bg-gradient-to-r from-mtm-red to-mtm-brown overflow-hidden shadow-xl sm:rounded-3xl p-8 text-white relative">
                 <div class="relative z-10">

@@ -34,7 +34,7 @@ class DashboardController extends Controller
         if ($user->mitraProfile) {
             $user->mitraProfile->update(['is_verified' => true]);
         }
-        $user->update(['role' => 'mitra']);
+        $user->update(['role' => 'user']);
         return redirect()->back()->with('success', 'Mitra berhasil diverifikasi!');
     }
 

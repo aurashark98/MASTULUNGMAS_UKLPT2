@@ -32,7 +32,8 @@ class AuthenticatedSessionController extends Controller
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'mitra') {
-            return redirect()->route('mitra.dashboard');
+            $user->update(['role' => 'user']);
+            return redirect()->route('dashboard');
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

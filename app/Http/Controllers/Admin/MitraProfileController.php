@@ -52,7 +52,7 @@ class MitraProfileController extends Controller
         $user = $profile->user;
         if (intval($request->is_verified) === 1) {
             if ($user) {
-                $user->update(['role' => 'mitra']);
+                $user->update(['role' => 'user']);
             }
             return redirect()->route('admin.mitra-profiles.index')->with('success', 'Profil Mitra baru berhasil dibuat dan diverifikasi!');
         } else {
@@ -106,7 +106,7 @@ class MitraProfileController extends Controller
         $user = $mitraProfile->user;
         if (intval($request->is_verified) === 1) {
             if ($user) {
-                $user->update(['role' => 'mitra']);
+                $user->update(['role' => 'user']);
             }
             return redirect()->route('admin.mitra-profiles.index')->with('success', 'Profil Mitra berhasil diperbarui!');
         } else {
