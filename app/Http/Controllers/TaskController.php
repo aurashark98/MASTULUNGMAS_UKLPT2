@@ -68,15 +68,24 @@ class TaskController extends Controller
         $category = \App\Models\ServiceCategory::find($request->category_id);
         $slug = $category ? $category->slug : 'default';
         
-        $basePrice = 15000;
-        if (str_contains($slug, 'antre')) $basePrice = 15000;
-        elseif (str_contains($slug, 'bersih') || str_contains($slug, 'cleaning')) $basePrice = 25000;
-        elseif (str_contains($slug, 'kirim') || str_contains($slug, 'kurir') || str_contains($slug, 'delivery')) $basePrice = 15000;
-        elseif (str_contains($slug, 'belanja') || str_contains($slug, 'shopper')) $basePrice = 20000;
+        $pricing = [
+            'kurir'         => ['base' => 5000,  'perKm' => 3500, 'perJam' => 5000],
+            'asisten'       => ['base' => 20000, 'perKm' => 2000, 'perJam' => 15000],
+            'antre'         => ['base' => 15000, 'perKm' => 1000, 'perJam' => 10000],
+            'teknis'        => ['base' => 25000, 'perKm' => 3000, 'perJam' => 20000],
+            'kebersihan'    => ['base' => 25000, 'perKm' => 2500, 'perJam' => 15000],
+            'belanja'       => ['base' => 10000, 'perKm' => 2000, 'perJam' => 8000],
+            'angkut-barang' => ['base' => 20000, 'perKm' => 4000, 'perJam' => 15000],
+        ];
+        $rates = collect($pricing)->first(fn($v, $k) => str_contains($slug, $k))
+            ?? ['base' => 15000, 'perKm' => 3000, 'perJam' => 10000];
         
         $distance = floatval($request->distance);
         $duration = intval($request->duration);
-        $calculatedBudget = $basePrice + ($distance * 3000) + ($duration * 10000);
+        $hour = (int) now()->format('H');
+        $surge = (($hour >= 7 && $hour < 9) || ($hour >= 16 && $hour < 19)) ? 1.3
+               : (($hour >= 22 || $hour < 5) ? 1.2 : 1.0);
+        $calculatedBudget = round(($rates['base'] + ($distance * $rates['perKm']) + ($duration * $rates['perJam'])) * $surge);
 
         $images = [];
         if ($request->hasFile('images')) {
@@ -140,15 +149,24 @@ class TaskController extends Controller
         $category = \App\Models\ServiceCategory::find($request->category_id);
         $slug = $category ? $category->slug : 'default';
         
-        $basePrice = 15000;
-        if (str_contains($slug, 'antre')) $basePrice = 15000;
-        elseif (str_contains($slug, 'bersih') || str_contains($slug, 'cleaning')) $basePrice = 25000;
-        elseif (str_contains($slug, 'kirim') || str_contains($slug, 'kurir') || str_contains($slug, 'delivery')) $basePrice = 15000;
-        elseif (str_contains($slug, 'belanja') || str_contains($slug, 'shopper')) $basePrice = 20000;
+        $pricing = [
+            'kurir'         => ['base' => 5000,  'perKm' => 3500, 'perJam' => 5000],
+            'asisten'       => ['base' => 20000, 'perKm' => 2000, 'perJam' => 15000],
+            'antre'         => ['base' => 15000, 'perKm' => 1000, 'perJam' => 10000],
+            'teknis'        => ['base' => 25000, 'perKm' => 3000, 'perJam' => 20000],
+            'kebersihan'    => ['base' => 25000, 'perKm' => 2500, 'perJam' => 15000],
+            'belanja'       => ['base' => 10000, 'perKm' => 2000, 'perJam' => 8000],
+            'angkut-barang' => ['base' => 20000, 'perKm' => 4000, 'perJam' => 15000],
+        ];
+        $rates = collect($pricing)->first(fn($v, $k) => str_contains($slug, $k))
+            ?? ['base' => 15000, 'perKm' => 3000, 'perJam' => 10000];
         
         $distance = floatval($request->distance);
         $duration = intval($request->duration);
-        $calculatedBudget = $basePrice + ($distance * 3000) + ($duration * 10000);
+        $hour = (int) now()->format('H');
+        $surge = (($hour >= 7 && $hour < 9) || ($hour >= 16 && $hour < 19)) ? 1.3
+               : (($hour >= 22 || $hour < 5) ? 1.2 : 1.0);
+        $calculatedBudget = round(($rates['base'] + ($distance * $rates['perKm']) + ($duration * $rates['perJam'])) * $surge);
 
         $images = $task->images ?? [];
         if ($request->hasFile('images')) {
