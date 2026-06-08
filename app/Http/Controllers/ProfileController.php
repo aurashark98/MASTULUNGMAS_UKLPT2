@@ -45,6 +45,24 @@ class ProfileController extends Controller
     }
 
     /**
+     * Show the Mitra registration form.
+     */
+    public function showRegisterMitra(Request $request)
+    {
+        $user = $request->user();
+
+        // If user already registered, redirect to profile edit
+        if ($user->mitraProfile) {
+            return redirect()->route('profile.edit');
+        }
+
+        return view('profile.register-mitra', [
+            'user' => $user,
+            'categories' => \App\Models\ServiceCategory::all(),
+        ]);
+    }
+
+    /**
      * Upgrade user to Mitra.
      */
     public function upgradeToMitra(Request $request): RedirectResponse

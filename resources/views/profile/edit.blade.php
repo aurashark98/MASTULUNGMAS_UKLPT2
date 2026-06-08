@@ -112,72 +112,55 @@
 
                 <!-- Mitra System Section -->
                 @if(!$user->mitraProfile)
-                    <!-- Form Pendaftaran Mitra -->
+                    <!-- Promotion Card to Register Mitra -->
                     <div class="glass-card rounded-[2.5rem] p-8 md:p-10 shadow-xl border border-amber-100 dark:border-amber-950/20 bg-amber-50/10 dark:bg-amber-950/5 backdrop-blur-md animate-fade-in">
-                        <div class="max-w-2xl space-y-6">
-                            <header>
-                                <h2 class="text-2xl font-black text-amber-600 dark:text-amber-505 flex items-center gap-3">
-                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                    {{ __('Daftar Sebagai Mitra Tulung') }}
-                                </h2>
-
-                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                    {{ __('Lengkapi persyaratan di bawah ini untuk menawarkan keahlian Anda dan mulai menghasilkan pendapatan tambahan di MTM.') }}
-                                </p>
-                            </header>
-
-                            <form method="post" action="{{ route('profile.upgrade') }}" enctype="multipart/form-data" class="space-y-6">
-                                @csrf
-                                
-                                <!-- KTP Photo -->
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto KTP <span class="text-red-500">*</span></label>
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex-1">
-                                            <input type="file" name="ktp_photo" required accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-amber-500/10 file:text-amber-600 dark:file:text-amber-400 hover:file:bg-amber-500/20 transition-all border border-gray-200 dark:border-white/5 rounded-2xl p-2.5 bg-white dark:bg-[#121212]/30" />
-                                            <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG. Maksimal 2MB.</p>
-                                        </div>
-                                    </div>
-                                    <x-input-error :messages="$errors->get('ktp_photo')" class="mt-1" />
+                        <div class="max-w-3xl space-y-6">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3.5 rounded-3xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
                                 </div>
-
-                                <!-- Profile Photo -->
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Foto Profil Mitra <span class="text-red-500">*</span></label>
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex-1">
-                                            <input type="file" name="profile_photo" required accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-amber-500/10 file:text-amber-600 dark:file:text-amber-400 hover:file:bg-amber-500/20 transition-all border border-gray-200 dark:border-white/5 rounded-2xl p-2.5 bg-white dark:bg-[#121212]/30" />
-                                            <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG. Maksimal 2MB.</p>
-                                        </div>
-                                    </div>
-                                    <x-input-error :messages="$errors->get('profile_photo')" class="mt-1" />
+                                <div>
+                                    <h2 class="text-2xl font-black text-amber-600 dark:text-amber-500 font-poppins">
+                                        {{ __('Bergabung Sebagai Mitra Tulung') }}
+                                    </h2>
+                                    <p class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest mt-0.5">MTM Partner Program</p>
                                 </div>
+                            </div>
 
-                                <!-- Skills Checklist -->
-                                <div class="space-y-2">
-                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Pilih Bidang Jasa Keahlian Anda <span class="text-red-500">*</span></label>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                        @foreach($categories as $category)
-                                            <label class="flex items-center gap-3 p-3 bg-white dark:bg-[#121212]/20 border border-gray-200 dark:border-white/5 rounded-2xl cursor-pointer hover:bg-amber-500/5 dark:hover:bg-amber-500/5 transition-all">
-                                                <input type="checkbox" name="skills[]" value="{{ $category->name }}" class="rounded text-amber-500 focus:ring-amber-500 border-gray-300 dark:border-white/10" />
-                                                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">{{ $category->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                    <x-input-error :messages="$errors->get('skills')" class="mt-1" />
+                            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed max-w-2xl">
+                                {{ __('Mulai tawarkan keahlian dan jasa pelayanan Anda kepada ribuan pelanggan di MTM. Atur jadwal kerja Anda sendiri dan kelola penawaran tarif jasa secara transparan.') }}
+                            </p>
+
+                            <!-- Benefits grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                                <div class="p-5 bg-white/50 dark:bg-black/25 rounded-2xl border border-gray-150 dark:border-white/5 space-y-2">
+                                    <div class="text-amber-500 font-black text-lg">01</div>
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-800 dark:text-white">Bebas Atur Waktu</h4>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-normal">Bekerja kapan pun Anda mau secara fleksibel sesuai kesiapan Anda.</p>
                                 </div>
-
-                                <!-- Bio -->
-                                <div class="space-y-2">
-                                    <label for="bio" class="block text-sm font-bold text-gray-700 dark:text-gray-300">Deskripsi Keahlian & Pengalaman (Bio) <span class="text-red-500">*</span></label>
-                                    <textarea id="bio" name="bio" rows="4" required placeholder="Jelaskan mengenai keahlian, pengalaman kerja, atau layanan yang biasa Anda tawarkan secara profesional..." class="block w-full bg-gray-50/50 dark:bg-[#121212]/30 border-gray-205 dark:border-white/5 rounded-2xl focus:ring-amber-500 focus:border-amber-500 text-sm p-4 text-gray-700 dark:text-gray-300"></textarea>
-                                    <x-input-error :messages="$errors->get('bio')" class="mt-1" />
+                                <div class="p-5 bg-white/50 dark:bg-black/25 rounded-2xl border border-gray-150 dark:border-white/5 space-y-2">
+                                    <div class="text-amber-500 font-black text-lg">02</div>
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-800 dark:text-white">Sistem Bidding</h4>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-normal">Tawarkan tarif jasa secara adil dan langsung bernegosiasi dengan konsumen.</p>
                                 </div>
+                                <div class="p-5 bg-white/50 dark:bg-black/25 rounded-2xl border border-gray-150 dark:border-white/5 space-y-2">
+                                    <div class="text-amber-500 font-black text-lg">03</div>
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-800 dark:text-white">Penghasilan Penuh</h4>
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-normal">Seluruh tarif hasil kesepakatan langsung masuk ke dompet digital Anda.</p>
+                                </div>
+                            </div>
 
-                                <x-primary-button class="bg-gradient-to-r from-amber-500 to-amber-700 hover:shadow-amber-500/25 px-8 py-3.5 !text-sm">
-                                    {{ __('Kirim Pendaftaran Mitra') }}
-                                </x-primary-button>
-                            </form>
+                            <div class="pt-4">
+                                <a href="{{ route('profile.register-mitra') }}" 
+                                   class="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-full font-bold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 transform active:scale-95 cursor-pointer">
+                                    {{ __('Mulai Pendaftaran Mitra') }}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @elseif(!$user->mitraProfile->is_verified)
