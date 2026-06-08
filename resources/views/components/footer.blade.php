@@ -3,57 +3,26 @@
     <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#EF4444] to-[#F59E0B]"></div>
     
     <div class="container mx-auto px-4 relative z-10">
-        <div class="grid lg:grid-cols-4 gap-16 mb-24">
-            <div class="lg:col-span-2 space-y-8">
-                <a href="{{ url('/') }}" class="flex items-center gap-4 group">
-                    <img src="{{ asset('images/logomtm.png') }}" alt="MTM Logo" class="h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
-                </a>
-                <p class="text-[#374151] dark:text-gray-400 max-w-md leading-relaxed text-lg">
-                    Platform digital gotong royong yang menghubungkan masyarakat dengan mitra terpercaya untuk segala jenis bantuan dalam satu klik.
-                </p>
-                <div class="flex items-center gap-4">
-                    @php
-                        $socials = [
-                            ['icon' => 'facebook', 'url' => '#'],
-                            ['icon' => 'instagram', 'url' => '#'],
-                            ['icon' => 'twitter', 'url' => '#'],
-                            ['icon' => 'linkedin', 'url' => '#'],
-                        ];
-                    @endphp
-                    @foreach($socials as $social)
-                        <a href="{{ $social['url'] }}" class="w-12 h-12 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center text-[#374151] dark:text-gray-400 hover:bg-gradient-to-r hover:from-[#EF4444] hover:to-[#F59E0B] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm border border-[#E5E7EB] dark:border-white/5">
-                            <i class="fab fa-{{ $social['icon'] }} text-xl"></i>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-[#111827] dark:text-white mb-8 font-poppins text-lg uppercase tracking-widest">Layanan</h4>
-                <ul class="space-y-4">
-                    @foreach(['Kurir Express', 'Asisten Pribadi', 'Jasa Antre', 'Bantuan Teknis', 'Kebersihan Rumah'] as $item)
-                        <li>
-                            <a href="#" class="text-[#374151] dark:text-gray-400 hover:text-[#DC2626] transition-colors flex items-center gap-2 group">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#D1D5DB] dark:bg-gray-700 group-hover:bg-[#DC2626] transition-colors"></span>
-                                {{ $item }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-[#111827] dark:text-white mb-8 font-poppins text-lg uppercase tracking-widest">Perusahaan</h4>
-                <ul class="space-y-4">
-                    @foreach(['Tentang Kami', 'Karir', 'Syarat & Ketentuan', 'Kebijakan Privasi', 'Pusat Bantuan'] as $item)
-                        <li>
-                            <a href="#" class="text-[#374151] dark:text-gray-400 hover:text-[#DC2626] transition-colors flex items-center gap-2 group">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#D1D5DB] dark:bg-gray-700 group-hover:bg-[#DC2626] transition-colors"></span>
-                                {{ $item }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+        <div class="flex flex-col items-center text-center mb-24 space-y-8">
+            <a href="{{ url('/') }}" class="flex items-center gap-4 group">
+                <img src="{{ asset('images/logomtm.png') }}" alt="MTM Logo" class="h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-110">
+            </a>
+            <p class="text-[#374151] dark:text-gray-400 max-w-lg leading-relaxed text-lg">
+                Platform digital gotong royong yang menghubungkan masyarakat dengan mitra terpercaya untuk segala jenis bantuan dalam satu klik.
+            </p>
+            <div class="flex items-center gap-5">
+                @php
+                    $socials = [
+                        ['icon' => 'instagram', 'url' => '#', 'label' => 'Instagram'],
+                        ['icon' => 'whatsapp',  'url' => '#', 'label' => 'WhatsApp'],
+                        ['icon' => 'tiktok',    'url' => '#', 'label' => 'TikTok'],
+                    ];
+                @endphp
+                @foreach($socials as $social)
+                    <a href="{{ $social['url'] }}" aria-label="{{ $social['label'] }}" class="w-14 h-14 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center text-[#374151] dark:text-gray-400 hover:bg-gradient-to-r hover:from-[#EF4444] hover:to-[#F59E0B] hover:text-white hover:scale-110 transition-all duration-300 shadow-sm border border-[#E5E7EB] dark:border-white/5">
+                        <i class="fab fa-{{ $social['icon'] }} text-2xl"></i>
+                    </a>
+                @endforeach
             </div>
         </div>
 
