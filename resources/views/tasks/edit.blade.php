@@ -17,7 +17,7 @@
                         <select id="category_id" name="category_id" onchange="updatePrice()" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-mtm-dark text-gray-900 dark:text-gray-100 focus:border-mtm-red focus:ring-mtm-red rounded-xl shadow-sm">
                             <option value="">Pilih Kategori</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ $task->category_id == $category->id ? 'selected' : '' }} class="text-gray-900 dark:text-gray-100">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" data-slug="{{ $category->slug }}" {{ $task->category_id == $category->id ? 'selected' : '' }} class="text-gray-900 dark:text-gray-100">{{ $category->name }}</option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
@@ -40,13 +40,13 @@
                             <x-input-label for="distance" :value="__('Estimasi Jarak Tempuh (Km)')" />
                             <x-text-input id="distance" name="distance" type="number" step="0.1" min="0" class="mt-1 block w-full text-gray-900 dark:text-gray-100 bg-gray-150 dark:bg-white/5 font-bold cursor-not-allowed" value="{{ $task->distance }}" required readonly />
                             <x-input-error :messages="$errors->get('distance')" class="mt-2" />
-                            <p class="text-[10px] text-gray-500 mt-1">Dihitung otomatis dari peta (Rp 3.000 / Km)</p>
+                            <p id="hint-distance" class="text-[10px] text-gray-500 mt-1">Dihitung otomatis dari peta (Rp 3.000 / Km)</p>
                         </div>
                         <div>
                             <x-input-label for="duration" :value="__('Estimasi Durasi Kerja (Jam)')" />
                             <x-text-input id="duration" name="duration" type="number" min="1" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="{{ $task->duration }}" required oninput="updatePrice()" />
                             <x-input-error :messages="$errors->get('duration')" class="mt-2" />
-                            <p class="text-[10px] text-gray-500 mt-1">Biaya per Jam: Rp 10.000</p>
+                            <p id="hint-duration" class="text-[10px] text-gray-500 mt-1">Biaya per Jam: Rp 10.000</p>
                         </div>
                     </div>
 
@@ -55,6 +55,10 @@
                         <div class="flex items-center justify-between">
                             <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Rincian Estimasi Harga Layanan (Kalkulator MTM)</h4>
                             <span id="lbl-surge-badge" class="hidden text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse"></span>
+                        </div>
+                        <!-- Info tarif aktif per kategori -->
+                        <div id="category-tariff-info" class="hidden bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-2.5">
+                            <p class="text-[11px] font-bold text-blue-700 dark:text-blue-300" id="lbl-category-tariff"></p>
                         </div>
                         <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
                             <span>Tarif Dasar Kategori:</span>
@@ -160,80 +164,81 @@
         </div>
     </div>
 
-<script>
+<script>// === MTM Category Pricing Table ===
+const MTM_CATEGORY_PRICING = {
+    'kurir':        { base: 5000,  perKm: 3500, perJam: 5000,  icon: '🚴', label: 'Kurir' },
+    'asisten':      { base: 20000, perKm: 2000, perJam: 15000, icon: '🙋', label: 'Asisten' },
+    'antre':        { base: 10000, perKm: 1000, perJam: 12000, icon: '🕐', label: 'Antre' },
+    'teknis':       { base: 25000, perKm: 2500, perJam: 20000, icon: '🔧', label: 'Teknis' },
+    'kebersihan':   { base: 15000, perKm: 1500, perJam: 12000, icon: '🧹', label: 'Kebersihan' },
+    'belanja':      { base: 10000, perKm: 2000, perJam: 8000,  icon: '🛒', label: 'Belanja' },
+    'angkut-barang':{ base: 20000, perKm: 4000, perJam: 10000, icon: '📦', label: 'Angkut Barang' },
+};
+const MTM_DEFAULT_PRICING = { base: 15000, perKm: 3000, perJam: 10000, icon: '⚙️', label: 'Default' };
+
 // === MTM Surge Pricing (Ala Gojek) ===
 function getSurgePricing() {
     const now = new Date();
     const hour = now.getHours();
-    
-    // Rush hour pagi: 07:00 - 09:00
-    if (hour >= 7 && hour < 9) {
-        return { multiplier: 1.3, label: '🔴 Jam Sibuk Pagi (07–09)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
-    }
-    // Rush hour sore: 16:00 - 19:00
-    if (hour >= 16 && hour < 19) {
-        return { multiplier: 1.3, label: '🔴 Jam Sibuk Sore (16–19)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
-    }
-    // Malam larut: 22:00 - 05:00
-    if (hour >= 22 || hour < 5) {
-        return { multiplier: 1.2, label: '🌙 Malam Larut (22–05)', badgeClass: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400', badge: '🌙 Malam Larut ×1.2' };
-    }
-    // Normal
+    if (hour >= 7 && hour < 9)   return { multiplier: 1.3, label: '🔴 Jam Sibuk Pagi (07–09)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
+    if (hour >= 16 && hour < 19) return { multiplier: 1.3, label: '🔴 Jam Sibuk Sore (16–19)', badgeClass: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400', badge: '🔴 Jam Sibuk ×1.3' };
+    if (hour >= 22 || hour < 5)  return { multiplier: 1.2, label: '🌙 Malam Larut (22–05)', badgeClass: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400', badge: '🌙 Malam Larut ×1.2' };
     return { multiplier: 1.0, label: null, badgeClass: '', badge: null };
 }
 
 window.updatePrice = function() {
     const categorySelect = document.getElementById('category_id');
-    const distanceInput = document.getElementById('distance');
-    const durationInput = document.getElementById('duration');
-    
+    const distanceInput  = document.getElementById('distance');
+    const durationInput  = document.getElementById('duration');
     if (!categorySelect || !distanceInput || !durationInput) return;
     
     const selectedOption = categorySelect.options[categorySelect.selectedIndex];
-    const categoryName = selectedOption ? selectedOption.text.toLowerCase() : '';
+    const slug    = selectedOption ? (selectedOption.getAttribute('data-slug') || '') : '';
+    const pricing = MTM_CATEGORY_PRICING[slug] || MTM_DEFAULT_PRICING;
     
-    let basePrice = 15000;
-    if (categoryName.includes('antre')) basePrice = 15000;
-    else if (categoryName.includes('bersih') || categoryName.includes('cleaning')) basePrice = 25000;
-    else if (categoryName.includes('kirim') || categoryName.includes('kurir') || categoryName.includes('delivery')) basePrice = 15000;
-    else if (categoryName.includes('belanja') || categoryName.includes('shopper')) basePrice = 20000;
+    const distance    = parseFloat(distanceInput.value) || 0;
+    const duration    = parseInt(durationInput.value) || 1;
+    const baseFee     = pricing.base;
+    const distanceFee = Math.round(distance * pricing.perKm);
+    const durationFee = Math.round(duration * pricing.perJam);
+    const subtotal    = baseFee + distanceFee + durationFee;
     
-    const distance = parseFloat(distanceInput.value) || 0;
-    const duration = parseInt(durationInput.value) || 1;
-    
-    const distanceFee = distance * 3000;
-    const durationFee = duration * 10000;
-    const subtotal = basePrice + distanceFee + durationFee;
-    
-    // Surge pricing
-    const surge = getSurgePricing();
+    const surge    = getSurgePricing();
     const surgeFee = Math.round(subtotal * (surge.multiplier - 1));
-    const total = subtotal + surgeFee;
+    const total    = subtotal + surgeFee;
     
-    // Update labels
-    document.getElementById('lbl-base-price').innerText = 'Rp ' + basePrice.toLocaleString('id-ID');
+    document.getElementById('lbl-base-price').innerText   = 'Rp ' + baseFee.toLocaleString('id-ID');
     document.getElementById('lbl-distance-fee').innerText = 'Rp ' + distanceFee.toLocaleString('id-ID');
     document.getElementById('lbl-duration-fee').innerText = 'Rp ' + durationFee.toLocaleString('id-ID');
-    document.getElementById('lbl-total-price').innerText = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('lbl-total-price').innerText  = 'Rp ' + total.toLocaleString('id-ID');
     
-    // Surge badge & row
-    const surgeRow = document.getElementById('surge-row');
-    const surgeBadge = document.getElementById('lbl-surge-badge');
+    const distHint = document.getElementById('hint-distance');
+    const durHint  = document.getElementById('hint-duration');
+    if (distHint) distHint.innerText = 'Dihitung otomatis dari peta (Rp ' + pricing.perKm.toLocaleString('id-ID') + ' / Km)';
+    if (durHint)  durHint.innerText  = 'Biaya per Jam: Rp ' + pricing.perJam.toLocaleString('id-ID');
+    
+    const tariffBox = document.getElementById('category-tariff-info');
+    const tariffLbl = document.getElementById('lbl-category-tariff');
+    if (slug && tariffBox && tariffLbl) {
+        tariffBox.classList.remove('hidden');
+        tariffLbl.innerText = pricing.icon + ' Tarif ' + pricing.label + ': Base Rp ' + pricing.base.toLocaleString('id-ID') + ' + Rp ' + pricing.perKm.toLocaleString('id-ID') + '/Km + Rp ' + pricing.perJam.toLocaleString('id-ID') + '/Jam';
+    } else if (tariffBox) {
+        tariffBox.classList.add('hidden');
+    }
+    
+    const surgeRow     = document.getElementById('surge-row');
+    const surgeBadge   = document.getElementById('lbl-surge-badge');
     const surgeLabelEl = document.getElementById('lbl-surge-label');
-    const surgeFeeEl = document.getElementById('lbl-surge-fee');
-    
+    const surgeFeeEl   = document.getElementById('lbl-surge-fee');
     if (surge.multiplier > 1) {
-        surgeRow.classList.remove('hidden');
-        surgeRow.classList.add('flex');
+        surgeRow.classList.remove('hidden'); surgeRow.classList.add('flex');
         surgeLabelEl.innerText = 'Biaya ' + surge.label + ':';
-        surgeFeeEl.innerText = 'Rp ' + surgeFee.toLocaleString('id-ID');
-        
+        surgeFeeEl.innerText   = 'Rp ' + surgeFee.toLocaleString('id-ID');
         surgeBadge.classList.remove('hidden');
         surgeBadge.className = 'text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse ' + surge.badgeClass;
         surgeBadge.innerText = surge.badge;
     } else {
-        surgeRow.classList.add('hidden');
-        surgeRow.classList.remove('flex');
+        surgeRow.classList.add('hidden'); surgeRow.classList.remove('flex');
         surgeBadge.classList.add('hidden');
     }
 };
