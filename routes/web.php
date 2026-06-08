@@ -32,6 +32,13 @@ Route::middleware('auth')->group(function () {
 
     // Notification Settings
     Route::patch('/notification-settings', [App\Http\Controllers\NotificationSettingController::class, 'update'])->name('notification-settings.update');
+
+    // Task Disputes
+    Route::get('/disputes', [App\Http\Controllers\TaskDisputeController::class, 'index'])->name('disputes.index');
+    Route::get('/tasks/{task}/dispute/create', [App\Http\Controllers\TaskDisputeController::class, 'create'])->name('disputes.create');
+    Route::post('/tasks/{task}/dispute', [App\Http\Controllers\TaskDisputeController::class, 'store'])->name('disputes.store');
+    Route::get('/disputes/{dispute}', [App\Http\Controllers\TaskDisputeController::class, 'show'])->name('disputes.show');
+    Route::post('/disputes/{dispute}/respond', [App\Http\Controllers\TaskDisputeController::class, 'respond'])->name('disputes.respond');
 });
 
 // User Dashboard (Default Breeze dashboard renamed/redirected)
@@ -69,6 +76,11 @@ Route::middleware(['auth', 'verified', 'role:mitra'])->prefix('mitra')->name('mi
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('/mitra/{user}/verify', [App\Http\Controllers\Admin\DashboardController::class, 'verifyMitra'])->name('mitra.verify');
+    
+    // Disputes Management
+    Route::get('/disputes', [App\Http\Controllers\Admin\TaskDisputeController::class, 'index'])->name('disputes.index');
+    Route::get('/disputes/{dispute}', [App\Http\Controllers\Admin\TaskDisputeController::class, 'show'])->name('disputes.show');
+    Route::patch('/disputes/{dispute}/status', [App\Http\Controllers\Admin\TaskDisputeController::class, 'updateStatus'])->name('disputes.update-status');
     Route::post('/mitra/{user}/reject', [App\Http\Controllers\Admin\DashboardController::class, 'rejectMitra'])->name('mitra.reject');
     
     // Resource Management (CRUD Penuh untuk Semua Tabel Aplikasi)

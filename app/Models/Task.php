@@ -45,6 +45,11 @@ class Task extends Model
         return $this->hasOne(TaskAssignment::class);
     }
 
+    public function dispute()
+    {
+        return $this->hasOne(TaskDispute::class);
+    }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);
