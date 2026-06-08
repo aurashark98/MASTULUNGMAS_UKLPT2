@@ -41,10 +41,12 @@
     <x-loading-screen />
 
     <div class="min-h-screen">
-        <x-navbar />
+        @if(!Auth::check() || Auth::user()->role !== 'mitra')
+            <x-navbar />
+        @endif
 
         <!-- Page Content -->
-        <main class="pt-24 pb-12">
+        <main class="{{ Auth::check() && Auth::user()->role === 'mitra' ? 'pt-8 pb-12' : 'pt-24 pb-12' }}">
             <div x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 500)" 
                  x-show="shown"
                  x-transition:enter="transition ease-out duration-1000"
@@ -54,7 +56,9 @@
             </div>
         </main>
 
-        <x-footer />
+        @if(!Auth::check() || Auth::user()->role !== 'mitra')
+            <x-footer />
+        @endif
     </div>
 
     <!-- Scroll to Top Button -->

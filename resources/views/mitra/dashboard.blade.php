@@ -46,22 +46,50 @@
                 </div>
             </div>
 
-            <!-- Driver Status Switcher -->
-            <div class="bg-gray-100/50 dark:bg-black/20 p-4 rounded-3xl border border-gray-200/50 dark:border-white/5 flex items-center gap-6">
-                <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Status Bekerja</p>
-                    <p class="text-sm font-bold mt-0.5 {{ $profile->is_online ? 'text-green-500' : 'text-gray-500' }}">
-                        {{ $profile->is_online ? 'Siap Menerima Kerja' : 'Istirahat / Off' }}
-                    </p>
+            <!-- Action Controls & Status Switcher -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+                <!-- Driver Status Switcher -->
+                <div class="bg-gray-100/50 dark:bg-black/20 p-4 rounded-3xl border border-gray-200/50 dark:border-white/5 flex items-center justify-between gap-6 flex-1 sm:flex-initial">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Status Bekerja</p>
+                        <p class="text-sm font-bold mt-0.5 {{ $profile->is_online ? 'text-green-500' : 'text-gray-500' }}">
+                            {{ $profile->is_online ? 'Siap Menerima Kerja' : 'Istirahat / Off' }}
+                        </p>
+                    </div>
+                    <form method="POST" action="{{ route('mitra.toggle-status') }}">
+                        @csrf
+                        <button type="submit" 
+                                class="relative inline-flex h-9 w-16 items-center rounded-full transition-all duration-300 focus:outline-none {{ $profile->is_online ? 'bg-green-500 shadow-md shadow-green-500/25' : 'bg-gray-300 dark:bg-gray-800' }}">
+                            <span class="sr-only">Toggle Status</span>
+                            <span class="inline-block h-6 w-6 transform rounded-full bg-white transition-all duration-300 {{ $profile->is_online ? 'translate-x-9' : 'translate-x-1' }}"></span>
+                        </button>
+                    </form>
                 </div>
-                <form method="POST" action="{{ route('mitra.toggle-status') }}">
-                    @csrf
-                    <button type="submit" 
-                            class="relative inline-flex h-9 w-16 items-center rounded-full transition-all duration-300 focus:outline-none {{ $profile->is_online ? 'bg-green-500 shadow-md shadow-green-500/25' : 'bg-gray-300 dark:bg-gray-800' }}">
-                        <span class="sr-only">Toggle Status</span>
-                        <span class="inline-block h-6 w-6 transform rounded-full bg-white transition-all duration-300 {{ $profile->is_online ? 'translate-x-9' : 'translate-x-1' }}"></span>
-                    </button>
-                </form>
+
+                <!-- Quick Actions (Switch Mode & Logout) -->
+                <div class="flex flex-row gap-3 justify-center">
+                    <form method="POST" action="{{ route('profile.switch-role') }}" class="flex-1 sm:flex-initial">
+                        @csrf
+                        <button type="submit" 
+                                class="h-14 w-full sm:w-auto px-5 rounded-3xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 border border-amber-500/10 active:scale-95 cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                            Mode Pengguna
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('logout') }}" class="flex-1 sm:flex-initial">
+                        @csrf
+                        <button type="submit" 
+                                class="h-14 w-full sm:w-auto px-5 rounded-3xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 border border-red-500/10 active:scale-95 cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 

@@ -14,8 +14,11 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request)
     {
+        if ($request->user()->role === 'mitra') {
+            return redirect()->route('mitra.dashboard');
+        }
         return view('profile.edit', [
             'user' => $request->user(),
             'categories' => \App\Models\ServiceCategory::all(),
@@ -27,6 +30,9 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        if ($request->user()->role === 'mitra') {
+            return redirect()->route('mitra.dashboard');
+        }
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
