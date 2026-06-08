@@ -36,17 +36,17 @@ class DashboardController extends Controller
     {
         if ($user->mitraProfile) {
             $user->mitraProfile->update(['is_verified' => true]);
+            $user->notify(new \App\Notifications\VerificationStatusNotification(true));
         }
-        $user->update(['role' => 'user']);
         return redirect()->back()->with('success', 'Mitra berhasil diverifikasi!');
     }
 
     public function rejectMitra(User $user)
     {
         if ($user->mitraProfile) {
-            $user->mitraProfile->delete();
+            $user->mitraProfile->update(['is_verified' => false]);
+            $user->notify(new \App\Notifications\VerificationStatusNotification(false));
         }
-        $user->update(['role' => 'user']);
         return redirect()->back()->with('success', 'Pengajuan Mitra berhasil ditolak!');
     }
 }

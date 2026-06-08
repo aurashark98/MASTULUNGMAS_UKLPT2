@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
     // Phone Verification
     Route::post('/phone/send-otp', [PhoneVerificationController::class, 'sendOtp'])->name('phone.send-otp');
     Route::post('/phone/verify-otp', [PhoneVerificationController::class, 'verifyOtp'])->name('phone.verify-otp');
+
+    // Notification Settings
+    Route::patch('/notification-settings', [App\Http\Controllers\NotificationSettingController::class, 'update'])->name('notification-settings.update');
 });
 
 // User Dashboard (Default Breeze dashboard renamed/redirected)
