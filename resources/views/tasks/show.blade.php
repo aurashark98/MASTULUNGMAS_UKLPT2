@@ -168,16 +168,78 @@
                                     </div>
                                     <div class="text-right">
                                         <p class="font-bold text-lg text-mtm-red mb-2">Rp {{ number_format($bid->bid_amount, 0, ',', '.') }}</p>
-                                        @if($task->status === 'bid_received' || $task->status === 'waiting_for_bid')
-                                            <form action="{{ route('bids.accept', $bid) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="px-6 py-2 bg-gradient-to-r from-mtm-red to-mtm-red-dark text-white rounded-full text-xs font-bold hover:shadow-lg transition-all">
-                                                    Terima Penawaran
-                                                </button>
-                                            </form>
-                                        @endif
+                                        <div class="flex flex-col gap-2">
+                                            @if($task->status === 'bid_received' || $task->status === 'waiting_for_bid')
+                                                <form action="{{ route('bids.accept', $bid) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="w-full px-6 py-2 bg-gradient-to-r from-mtm-red to-mtm-red-dark text-white rounded-full text-xs font-bold hover:shadow-lg transition-all">
+                                                        Terima Penawaran
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'mitra-portfolio-{{ $bid->mitra_id }}')" class="px-6 py-2 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 rounded-full text-xs font-bold hover:bg-gray-200 transition-all">
+                                                Lihat Portfolio
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Portfolio Preview Modal -->
+                                <x-modal name="mitra-portfolio-{{ $bid->mitra_id }}" focusable>
+                                    <div class="p-8">
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-mtm-red/20">
+                                                <img src="{{ $bid->mitra->profile_photo_url }}" class="w-full h-full object-cover">
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xl font-black text-gray-900 dark:text-white font-poppins">{{ $bid->mitra->name }}</h3>
+                                                <div class="flex items-center gap-3 mt-1">
+                                                    <div class="flex items-center gap-1 text-xs text-yellow-500 font-bold">
+                                                        ★ {{ number_format($bid->mitra->mitraProfile->rating, 1) }}
+                                                    </div>
+                                                    <span class="text-gray-300 dark:text-white/10 text-xs">•</span>
+                                                    <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">{{ $bid->mitra->portfolios->count() }} Portfolio</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-6">
+                                            <h4 class="text-xs font-black uppercase tracking-widest text-gray-400">Portfolio Terbaru</h4>
+                                            
+                                            @if($bid->mitra->portfolios->isEmpty())
+                                                <div class="py-12 text-center bg-gray-50 dark:bg-white/5 rounded-3xl border border-dashed border-gray-200 dark:border-white/10">
+                                                    <p class="text-sm text-gray-500">Mitra belum menambahkan portfolio.</p>
+                                                </div>
+                                            @else
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    @foreach($bid->mitra->portfolios->take(4) as $portfolio)
+                                                        <div class="bg-gray-50 dark:bg-white/5 rounded-2xl overflow-hidden border border-gray-100 dark:border-white/10 group">
+                                                            <div class="h-32 overflow-hidden">
+                                                                @if($portfolio->image_path)
+                                                                    <img src="{{ asset('storage/' . $portfolio->image_path) }}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-500">
+                                                                @else
+                                                                    <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="p-4">
+                                                                <h5 class="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate">{{ $portfolio->title }}</h5>
+                                                                <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest">{{ $portfolio->completed_date->format('M Y') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div class="mt-8 pt-8 border-t border-gray-100 dark:border-white/5">
+                                            <button x-on:click="$dispatch('close')" class="w-full py-4 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 rounded-2xl font-black text-sm hover:bg-gray-200 transition-all">
+                                                Tutup
+                                            </button>
+                                        </div>
+                                    </div>
+                                </x-modal>
                             @empty
                                 <div class="bg-gray-50 dark:bg-mtm-dark/50 p-12 rounded-3xl text-center">
                                     <p class="text-gray-500">Belum ada penawaran masuk.</p>
