@@ -20,6 +20,9 @@
                         <x-nav-link :href="route('mitra.dashboard')" :active="request()->routeIs('mitra.dashboard')">
                             {{ __('Mitra Dashboard') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('mitra.portfolios.index')" :active="request()->routeIs('mitra.portfolios.index')">
+                            {{ __('Portfolio') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
@@ -89,6 +92,9 @@
             @elseif(Auth::user()->role === 'mitra')
                 <x-responsive-nav-link :href="route('mitra.dashboard')" :active="request()->routeIs('mitra.dashboard')">
                     {{ __('Mitra Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('mitra.portfolios.index')" :active="request()->routeIs('mitra.portfolios.index')">
+                    {{ __('Portfolio') }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">

@@ -77,9 +77,12 @@ class User extends Authenticatable
 
     public function chatRooms()
     {
-        return $this->role === 'mitra' 
-            ? $this->hasMany(ChatRoom::class, 'mitra_id') 
-            : $this->hasMany(ChatRoom::class, 'user_id');
+        return $this->hasMany(ChatRoom::class, $this->role === 'user' ? 'user_id' : 'mitra_id');
+    }
+
+    public function portfolios()
+    {
+        return $this->hasMany(PartnerPortfolio::class, 'partner_id');
     }
 
     /**

@@ -34,6 +34,12 @@ Route::middleware(['auth', 'verified', 'role:mitra'])->prefix('mitra')->name('mi
     Route::post('/tasks/{task}/bid', [App\Http\Controllers\BidController::class, 'store'])->name('tasks.bid');
     Route::post('/tasks/{task}/start', [App\Http\Controllers\Mitra\DashboardController::class, 'startTask'])->name('tasks.start');
     Route::post('/tasks/{task}/complete', [App\Http\Controllers\Mitra\DashboardController::class, 'completeTask'])->name('tasks.complete');
+
+    // Portfolio
+    Route::get('/portfolios', [App\Http\Controllers\Mitra\PartnerPortfolioController::class, 'index'])->name('portfolios.index');
+    Route::post('/portfolios', [App\Http\Controllers\Mitra\PartnerPortfolioController::class, 'store'])->name('portfolios.store');
+    Route::put('/portfolios/{portfolio}', [App\Http\Controllers\Mitra\PartnerPortfolioController::class, 'update'])->name('portfolios.update');
+    Route::delete('/portfolios/{portfolio}', [App\Http\Controllers\Mitra\PartnerPortfolioController::class, 'destroy'])->name('portfolios.destroy');
 });
 
 // Admin Dashboard
