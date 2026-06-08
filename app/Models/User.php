@@ -85,6 +85,59 @@ class User extends Authenticatable
         return $this->hasMany(PartnerPortfolio::class, 'partner_id');
     }
 
+    public function favoritePartners()
+    {
+        return $this->belongsToMany(User::class, 'favorite_partners', 'user_id', 'partner_id')->withTimestamps();
+    }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorite_partners', 'partner_id', 'user_id')->withTimestamps();
+    }
+
+    /**
+     * Level System
+     */
+    public function getCompletedTasksCountAttribute()
+    {
+        return $this->assignments()->whereNotNull('completed_at')->count();
+    }
+
+    public function getLevelAttribute()
+    {
+        $count = $this->completed_tasks_count;
+        if ($count > 100) return 'Platinum';
+        if ($count > 50) return 'Gold';
+        if ($count > 20) return 'Silver';
+        return 'Bronze';
+    }
+
+    public function getLevelBadgeAttribute()
+    {
+        return match($this->level) {
+            'Platinum' => 'bg-purple-100 text-purple-700 border-purple-200',
+            'Gold' => 'bg-amber-100 text-amber-700 border-amber-200',
+            'Silver' => 'bg-gray-100 text-gray-700 border-gray-200',
+            default => 'bg-orange-100 text-orange-700 border-orange-200',
+        };
+    }
+
+    public function isFavoriteOf($userId)
+    {
+        return $this->favoritedBy()->where('user_id', $userId)->exists();
+    }
+
+    /**
+     * Scopes
+     */
+    public function scopeVerifiedMitra($query)
+    {
+        return $query->where('role', 'mitra')
+            ->whereHas('mitraProfile', function($q) {
+                $q->where('is_verified', true);
+            });
+    }
+
     /**
      * Role checks
      */

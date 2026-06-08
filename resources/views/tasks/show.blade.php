@@ -159,7 +159,12 @@
                                         <img src="{{ $bid->mitra->profile_photo_url }}" class="w-full h-full object-cover">
                                     </div>
                                     <div>
-                                            <h5 class="font-bold text-sm">{{ $bid->mitra->name }}</h5>
+                                            <div class="flex items-center gap-2">
+                                                <h5 class="font-bold text-sm">{{ $bid->mitra->name }}</h5>
+                                                <span class="px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest border {{ $bid->mitra->level_badge }}">
+                                                    {{ $bid->mitra->level }}
+                                                </span>
+                                            </div>
                                             <div class="flex items-center gap-1 text-xs text-yellow-500">
                                                 <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                                 <span class="font-bold">{{ number_format($bid->mitra->mitraProfile->rating, 1) }}</span>
@@ -192,14 +197,40 @@
                                                 <img src="{{ $bid->mitra->profile_photo_url }}" class="w-full h-full object-cover">
                                             </div>
                                             <div>
-                                                <h3 class="text-xl font-black text-gray-900 dark:text-white font-poppins">{{ $bid->mitra->name }}</h3>
+                                                <div class="flex items-center gap-3">
+                                                    <h3 class="text-xl font-black text-gray-900 dark:text-white font-poppins">{{ $bid->mitra->name }}</h3>
+                                                    <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border {{ $bid->mitra->level_badge }}">
+                                                        {{ $bid->mitra->level }}
+                                                    </span>
+                                                </div>
                                                 <div class="flex items-center gap-3 mt-1">
                                                     <div class="flex items-center gap-1 text-xs text-yellow-500 font-bold">
                                                         ★ {{ number_format($bid->mitra->mitraProfile->rating, 1) }}
                                                     </div>
                                                     <span class="text-gray-300 dark:text-white/10 text-xs">•</span>
                                                     <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">{{ $bid->mitra->portfolios->count() }} Portfolio</span>
+                                                    <span class="text-gray-300 dark:text-white/10 text-xs">•</span>
+                                                    <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Gabung {{ $bid->mitra->created_at->format('M Y') }}</span>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                            <div class="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl text-center">
+                                                <p class="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-1">Tugas Selesai</p>
+                                                <p class="text-sm font-black text-gray-900 dark:text-white">{{ $bid->mitra->completed_tasks_count }}</p>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl text-center">
+                                                <p class="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-1">Review</p>
+                                                <p class="text-sm font-black text-gray-900 dark:text-white">{{ $bid->mitra->receivedReviews->count() }}</p>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl text-center">
+                                                <p class="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-1">Level</p>
+                                                <p class="text-sm font-black text-gray-900 dark:text-white">{{ $bid->mitra->level }}</p>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl text-center">
+                                                <p class="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-1">Total Pendapatan</p>
+                                                <p class="text-sm font-black text-mtm-red">Rp {{ number_format($bid->mitra->mitraProfile->earnings, 0, ',', '.') }}</p>
                                             </div>
                                         </div>
 

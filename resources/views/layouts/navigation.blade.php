@@ -27,6 +27,12 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners.index')">
+                            {{ __('Cari Mitra') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('partners.favorites')" :active="request()->routeIs('partners.favorites')">
+                            {{ __('Favorit') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -99,6 +105,12 @@
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('partners.index')" :active="request()->routeIs('partners.index')">
+                    {{ __('Cari Mitra') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('partners.favorites')" :active="request()->routeIs('partners.favorites')">
+                    {{ __('Favorit') }}
                 </x-responsive-nav-link>
             @endif
         </div>

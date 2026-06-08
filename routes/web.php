@@ -5,11 +5,26 @@ use Illuminate\Support\Facades\Route;
 use App\Models\ServiceCategory;
 
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\BidController;
+use App\Http\Controllers\TaskAssignmentController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PartnerController;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/layanan', [PageController::class, 'layanan'])->name('layanan');
 Route::get('/cara-kerja', [PageController::class, 'caraKerja'])->name('cara-kerja');
 Route::get('/tentang-kami', [PageController::class, 'tentangKami'])->name('tentang-kami');
+
+// Partners Discovery
+Route::get('/partners', [PartnerController::class, 'index'])->name('partners.index');
+Route::middleware('auth')->group(function () {
+    Route::post('/partners/{partner}/favorite', [PartnerController::class, 'toggleFavorite'])->name('partners.favorite');
+    Route::get('/favorites', [PartnerController::class, 'favorites'])->name('partners.favorites');
+});
 
 // User Dashboard (Default Breeze dashboard renamed/redirected)
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {

@@ -29,6 +29,9 @@
                 <div class="space-y-1.5">
                     <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap">
                         <h2 class="text-2xl font-black text-gray-900 dark:text-white font-poppins">{{ Auth::user()->name }}</h2>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border {{ Auth::user()->level_badge }}">
+                            {{ Auth::user()->level }}
+                        </span>
                         <span class="px-3 py-1 text-[10px] font-bold tracking-wider uppercase rounded-full {{ $profile->is_online ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-500' }}">
                             {{ $profile->is_online ? 'Online' : 'Offline' }}
                         </span>
