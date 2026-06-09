@@ -47,7 +47,7 @@
     </section>
 
     <!-- Visual Process Section -->
-    <section class="py-24 bg-mtm-red/5">
+    <section class="py-24 bg-mtm-red/5 dark:bg-mtm-red/10">
         <div class="container mx-auto px-4">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="glass-card p-8 rounded-[4rem] border-white/10 shadow-3xl">
@@ -62,7 +62,7 @@
                             </div>
                             <div>
                                 <h5 class="font-bold text-lg">Keamanan Terjamin</h5>
-                                <p class="text-gray-500">Semua mitra kami telah melalui proses verifikasi identitas yang ketat.</p>
+                                <p class="text-gray-500 dark:text-gray-400">Semua mitra kami telah melalui proses verifikasi identitas yang ketat.</p>
                             </div>
                         </div>
                         <div class="flex gap-4">
@@ -71,7 +71,7 @@
                             </div>
                             <div>
                                 <h5 class="font-bold text-lg">Harga Transparan</h5>
-                                <p class="text-gray-500">Sistem penawaran memastikan Anda mendapatkan harga terbaik tanpa biaya tersembunyi.</p>
+                                <p class="text-gray-500 dark:text-gray-400">Sistem penawaran memastikan Anda mendapatkan harga terbaik tanpa biaya tersembunyi.</p>
                             </div>
                         </div>
                         <div class="flex gap-4">
@@ -80,7 +80,7 @@
                             </div>
                             <div>
                                 <h5 class="font-bold text-lg">Dukungan 24/7</h5>
-                                <p class="text-gray-500">Tim kami siap membantu Anda kapan saja jika terjadi kendala.</p>
+                                <p class="text-gray-500 dark:text-gray-400">Tim kami siap membantu Anda kapan saja jika terjadi kendala.</p>
                             </div>
                         </div>
                     </div>

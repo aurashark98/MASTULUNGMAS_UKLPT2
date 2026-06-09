@@ -66,7 +66,13 @@ Route::prefix('v1')->group(function () {
         Route::post('/partners/{partner}/favorite',  [PartnerApiController::class, 'toggleFavorite']);
 
         // Tasks (CRUD)
-        Route::apiResource('tasks', TaskController::class);
+        Route::apiResource('tasks', TaskController::class)->names([
+            'index' => 'api.tasks.index',
+            'store' => 'api.tasks.store',
+            'show' => 'api.tasks.show',
+            'update' => 'api.tasks.update',
+            'destroy' => 'api.tasks.destroy',
+        ]);
 
         // Task Actions (mitra only)
         Route::post('/tasks/{task}/start',    [TaskActionController::class, 'start']);

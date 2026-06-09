@@ -62,7 +62,10 @@ class TaskController extends Controller
             'destination_location' => 'nullable|string',
             'distance' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'budget' => 'required|numeric', // Backend will calculate min budget based on distance/duration
         ]);
 
         $category = \App\Models\ServiceCategory::find($request->category_id);
@@ -86,6 +89,15 @@ class TaskController extends Controller
         $surge = (($hour >= 7 && $hour < 9) || ($hour >= 16 && $hour < 19)) ? 1.3
                : (($hour >= 22 || $hour < 5) ? 1.2 : 1.0);
         $calculatedBudget = round(($rates['base'] + ($distance * $rates['perKm']) + ($duration * $rates['perJam'])) * $surge);
+        
+        $minBudget = floor($calculatedBudget * 0.8);
+        $request->validate([
+            'budget' => 'numeric|min:' . $minBudget
+        ], [
+            'budget.min' => 'Harga penawaran tidak boleh lebih rendah dari 80% harga sistem (Minimal Rp ' . number_format($minBudget, 0, ',', '.') . ')'
+        ]);
+
+        $finalBudget = $request->budget >= $minBudget ? $request->budget : $calculatedBudget;
 
         $images = [];
         if ($request->hasFile('images')) {
@@ -100,9 +112,11 @@ class TaskController extends Controller
             'category_id' => $request->category_id,
             'title' => $request->title,
             'description' => $request->description,
-            'budget' => $calculatedBudget,
+            'budget' => $finalBudget,
             'location' => $request->location,
             'destination_location' => $request->destination_location,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'distance' => $distance,
             'duration' => $duration,
             'images' => $images,
@@ -143,6 +157,8 @@ class TaskController extends Controller
             'destination_location' => 'nullable|string',
             'distance' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -183,6 +199,8 @@ class TaskController extends Controller
             'budget' => $calculatedBudget,
             'location' => $request->location,
             'destination_location' => $request->destination_location,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'distance' => $distance,
             'duration' => $duration,
             'images' => $images,
@@ -205,5 +223,40 @@ class TaskController extends Controller
         \App\Models\ActivityLog::log('Task Delete', "Menghapus tugas '{$title}'");
 
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil dihapus!');
+    }
+
+    public function getBidsData(Task $task)
+    {
+        if (Auth::id() !== $task->user_id) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $bids = $task->bids()
+            ->where('status', 'pending')
+            ->with(['mitra' => function($query) {
+                $query->with('mitraProfile');
+            }])
+            ->get()
+            ->map(function($bid) {
+                return [
+                    'id' => $bid->id,
+                    'mitra_id' => $bid->mitra_id,
+                    'mitra_name' => $bid->mitra->name,
+                    'mitra_level' => $bid->mitra->level,
+                    'mitra_level_badge' => $bid->mitra->level_badge,
+                    'mitra_rating' => $bid->mitra->mitraProfile ? round($bid->mitra->mitraProfile->rating, 1) : 5.0,
+                    'mitra_photo' => $bid->mitra->profile_photo_url,
+                    'bid_amount' => (int) $bid->bid_amount,
+                    'message' => $bid->message,
+                    'accept_url' => route('bids.accept', $bid->id),
+                    'reject_url' => route('bids.reject', $bid->id),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'task_status' => $task->status,
+            'bids' => $bids
+        ]);
     }
 }

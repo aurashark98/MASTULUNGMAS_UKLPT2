@@ -36,6 +36,7 @@
                             <th class="px-6 py-4">Nominal</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4">Metode</th>
+                            <th class="px-6 py-4">Bukti</th>
                             <th class="px-6 py-4">Tanggal</th>
                             <th class="px-6 py-4 text-center">Aksi</th>
                         </tr>
@@ -79,11 +80,26 @@
                                 <td class="px-6 py-4 text-xs font-bold text-gray-650 dark:text-gray-400">
                                     {{ strtoupper($payment->payment_method ?? 'E-Wallet') }}
                                 </td>
+                                <td class="px-6 py-4">
+                                    @if($payment->proof_path)
+                                        <a href="{{ Storage::url($payment->proof_path) }}" target="_blank" class="text-[10px] bg-blue-500/10 text-blue-500 px-2 py-1 rounded-lg hover:bg-blue-500/20 transition-all font-bold block text-center">Lihat Bukti</a>
+                                    @else
+                                        <span class="text-xs text-gray-400 block text-center">-</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-xs text-gray-450 dark:text-gray-500 font-medium">
                                     {{ $payment->created_at->format('d M Y H:i') }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-center gap-2">
+                                        @if($payment->status === 'pending')
+                                            <form action="{{ route('admin.payments.verify', $payment) }}" method="POST" onsubmit="return confirm('Verifikasi pembayaran ini? Mitra akan otomatis ditugaskan ke klien.')">
+                                                @csrf
+                                                <button type="submit" class="p-2 bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-500/20 rounded-xl transition-all cursor-pointer font-bold text-[10px] uppercase tracking-wider shadow-sm" title="Verifikasi Lunas">
+                                                    Verifikasi
+                                                </button>
+                                            </form>
+                                        @endif
                                         <a href="{{ route('admin.payments.edit', $payment) }}" class="p-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 rounded-xl transition-all cursor-pointer">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>

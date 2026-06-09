@@ -33,8 +33,8 @@ class BidAcceptedNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Selamat! Penawaran Anda Diterima: ' . $this->bid->task->title)
             ->greeting('Halo, ' . $notifiable->name . '!')
-            ->line('Kabar gembira! Pengguna telah menerima penawaran Anda untuk tugas: ' . $this->bid->task->title)
-            ->line('Silakan mulai mengerjakan tugas tersebut setelah status berubah menjadi "Assigned".')
+            ->line('Kabar gembira! Pengguna telah menyetujui penawaran Anda untuk tugas: ' . $this->bid->task->title)
+            ->line('Saat ini pengguna sedang dalam proses menyelesaikan pembayaran. Anda akan mendapatkan notifikasi lagi setelah pembayaran selesai dan tugas dapat dikerjakan.')
             ->action('Lihat Detail Tugas', route('tasks.show', $this->bid->task_id))
             ->line('Terima kasih telah bekerja sama dengan Mas Tulung Mas!');
     }
@@ -44,7 +44,7 @@ class BidAcceptedNotification extends Notification implements ShouldQueue
         return [
             'task_id' => $this->bid->task_id,
             'task_title' => $this->bid->task->title,
-            'message' => 'Penawaran Anda untuk "' . $this->bid->task->title . '" telah diterima!',
+            'message' => 'Penawaran disetujui! Menunggu pengguna melakukan pembayaran untuk "' . $this->bid->task->title . '".',
         ];
     }
 }

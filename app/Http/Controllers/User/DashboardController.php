@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,11 +22,13 @@ class DashboardController extends Controller
 
         $task_history = Task::where('user_id', $user->id)
             ->whereIn('status', ['completed', 'cancelled'])
-            ->with('category')
+            ->with(['category', 'review'])
             ->latest()
             ->limit(5)
             ->get();
 
-        return view('dashboard', compact('active_tasks', 'task_history'));
+        $categories = ServiceCategory::all();
+
+        return view('dashboard', compact('active_tasks', 'task_history', 'categories'));
     }
 }

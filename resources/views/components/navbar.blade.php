@@ -38,8 +38,7 @@
                     </a>
                 @endforeach
             @else
-                <div class="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-500 rounded-full border border-amber-500/20 text-xs font-black uppercase tracking-widest animate-pulse">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <div class="flex items-center gap-2 px-4 py-2 bg-mtm-red/10 text-mtm-red rounded-full border border-mtm-red/20 text-xs font-black uppercase tracking-widest">
                     Konsol Mitra Kerja
                 </div>
             @endif
@@ -47,15 +46,31 @@
 
         <!-- Action Section -->
         <div class="flex items-center gap-2">
-            <div class="hidden lg:block w-px h-6 bg-[#D1D5DB] dark:bg-white/10 mr-4"></div>
+            @if(Auth::check() && Auth::user()->isMitra())
+                @php $profile = Auth::user()->mitraProfile; @endphp
+                <div class="flex items-center gap-2 mr-1">
+                    <span class="hidden md:block text-[10px] font-bold uppercase tracking-widest {{ $profile->is_online ? 'text-green-500' : 'text-gray-500' }}">
+                        {{ $profile->is_online ? 'Kerja (On)' : 'Off' }}
+                    </span>
+                    <form method="POST" action="{{ route('mitra.toggle-status') }}">
+                        @csrf
+                        <button type="submit" 
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none {{ $profile->is_online ? 'bg-green-500 shadow-sm shadow-green-500/25' : 'bg-gray-300 dark:bg-gray-600' }}">
+                            <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-all duration-300 {{ $profile->is_online ? 'translate-x-6' : 'translate-x-1' }}"></span>
+                        </button>
+                    </form>
+                </div>
+                <div class="w-px h-6 bg-[#D1D5DB] dark:bg-white/10 mx-1"></div>
+            @else
+                <div class="hidden lg:block w-px h-6 bg-[#D1D5DB] dark:bg-white/10 mr-4"></div>
+            @endif
             
             <div class="flex items-center gap-2">
                 <div class="flex items-center gap-2 mr-1">
-                    <x-theme-toggle />
                     @auth
                         <!-- Notifications Icon -->
                         <a href="{{ route('notifications.index') }}" class="relative p-2 rounded-full hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all text-[#111827] dark:text-white hover:text-mtm-red dark:hover:text-mtm-red" title="Notifikasi">
-                            <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                             @php
                                 $unreadNotificationsCount = \Illuminate\Support\Facades\DB::table('notifications')
                                     ->where('notifiable_id', Auth::id())
@@ -71,7 +86,7 @@
 
                         <!-- Chat Icon -->
                         <a href="{{ route('chat.index') }}" class="relative p-2 rounded-full hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all text-[#111827] dark:text-white hover:text-mtm-red dark:hover:text-mtm-red" title="Pesan Chat">
-                            <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
                             @php
                                 $unreadChatsCount = \App\Models\Message::whereHas('chatRoom', function($q) {
                                         $q->where('user_id', Auth::id())->orWhere('mitra_id', Auth::id());
@@ -109,9 +124,11 @@
                                 <div class="px-4 py-2 border-b border-[#D1D5DB] dark:border-white/5">
                                     <p class="text-xs font-bold text-[#6B7280] uppercase tracking-widest">Menu Pengguna</p>
                                 </div>
-                                <x-dropdown-link :href="Auth::user()->isAdmin() ? route('admin.dashboard') : (Auth::user()->isMitra() ? route('mitra.dashboard') : route('dashboard'))" class="font-bold text-[#111827] dark:!text-white">
-                                    {{ __('Dashboard') }}
-                                </x-dropdown-link>
+                                @if(!Auth::user()->isMitra())
+                                    <x-dropdown-link :href="Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard')" class="font-bold text-[#111827] dark:!text-white">
+                                        {{ __('Dashboard') }}
+                                    </x-dropdown-link>
+                                @endif
                                 <x-dropdown-link :href="route('profile.edit')" class="font-bold text-[#111827] dark:!text-white">
                                     {{ __('Profil Saya') }}
                                 </x-dropdown-link>
@@ -190,7 +207,9 @@
             @endif
             <div class="flex flex-col gap-3">
                 @auth
-                    <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : (Auth::user()->isMitra() ? route('mitra.dashboard') : route('dashboard')) }}" class="btn-outline-premium !py-3">Dashboard</a>
+                    @if(!Auth::user()->isMitra())
+                        <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="btn-outline-premium !py-3">Dashboard</a>
+                    @endif
                     @if(Auth::user()->mitraProfile && Auth::user()->mitraProfile->is_verified)
                         <form method="POST" action="{{ route('profile.switch-role') }}" class="w-full">
                             @csrf
@@ -207,9 +226,12 @@
 </nav>
 
 <!-- Auth Selection Modal -->
-<x-modal name="auth-modal" :show="$errors->any() || session('open_login') || session('open_register')" maxWidth="md" focusable>
+@php
+    $hasAuthErrors = $errors->has('email') || $errors->has('password') || $errors->has('name') || $errors->has('password_confirmation');
+@endphp
+<x-modal name="auth-modal" :show="$hasAuthErrors || session('open_login') || session('open_register')" maxWidth="md" focusable>
     <div x-data="{ 
-            activeTab: '{{ (session('open_register') || $errors->has('name') || $errors->has('password_confirmation') || old('role') || session('role')) ? 'register' : 'login' }}',
+            activeTab: '{{ (session('open_register') || $errors->has('name') || $errors->has('password_confirmation') || old('role') === 'user' && $hasAuthErrors) ? 'register' : 'login' }}',
             role: '{{ old('role', session('role', 'user')) }}'
          }"
          @open-auth-modal.window="activeTab = $event.detail.tab || 'login'; if ($event.detail.role) { role = $event.detail.role }"

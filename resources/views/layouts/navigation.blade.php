@@ -23,6 +23,9 @@
                         <x-nav-link :href="route('mitra.portfolios.index')" :active="request()->routeIs('mitra.portfolios.index')">
                             {{ __('Portfolio') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.*')">
+                            {{ __('Kotak Pesan') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
@@ -32,6 +35,9 @@
                         </x-nav-link>
                         <x-nav-link :href="route('partners.favorites')" :active="request()->routeIs('partners.favorites')">
                             {{ __('Favorit') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.*')">
+                            {{ __('Kotak Pesan') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -106,6 +112,9 @@
                 <x-responsive-nav-link :href="route('mitra.portfolios.index')" :active="request()->routeIs('mitra.portfolios.index')">
                     {{ __('Portfolio') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.*')">
+                    {{ __('Kotak Pesan') }}
+                </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
@@ -115,6 +124,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('partners.favorites')" :active="request()->routeIs('partners.favorites')">
                     {{ __('Favorit') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.*')">
+                    {{ __('Kotak Pesan') }}
                 </x-responsive-nav-link>
             @endif
         </div>

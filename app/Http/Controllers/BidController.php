@@ -11,9 +11,13 @@ class BidController extends Controller
 {
     public function store(Request $request, Task $task)
     {
+        $minBid = $task->budget * 0.8; // Batas minimal penawaran 80% dari harga sistem
+        
         $request->validate([
-            'bid_amount' => 'required|numeric|min:0',
+            'bid_amount' => 'required|numeric|min:' . $minBid,
             'message' => 'nullable|string',
+        ], [
+            'bid_amount.min' => 'Harga penawaran tidak boleh terlalu jauh di bawah estimasi (Minimal Rp ' . number_format($minBid, 0, ',', '.') . ')'
         ]);
 
         $bid = TaskBid::create([
@@ -51,28 +55,50 @@ class BidController extends Controller
         // Reject other bids
         $task->bids()->where('id', '!=', $bid->id)->update(['status' => 'rejected']);
         
-        // Update task status
-        $task->update(['status' => 'bid_accepted']);
-
-        // Create assignment
-        $task->assignment()->create([
-            'mitra_id' => $bid->mitra_id,
-            'assigned_at' => now(),
+        // Update task status to bid_accepted (waiting for payment)
+        $task->update([
+            'status' => 'bid_accepted',
+            'budget' => $bid->bid_amount, // update budget to agreed price
         ]);
 
-        // Create Chat Room automatically
-        \App\Models\ChatRoom::firstOrCreate([
-            'task_id' => $task->id,
-            'user_id' => $task->user_id,
-            'mitra_id' => $bid->mitra_id,
-        ]);
+        // NOTE: Assignment is created AFTER payment, not here.
 
         // Log Activity
         \App\Models\ActivityLog::log('Bid Acceptance', "Menerima penawaran dari Mitra {$bid->mitra->name} untuk tugas '{$task->title}'");
 
-        // Notify Mitra
+        // Notify Mitra that bid was accepted, pending payment
         $bid->mitra->notify(new \App\Notifications\BidAcceptedNotification($bid));
 
-        return redirect()->route('tasks.show', $task)->with('success', 'Penawaran diterima!');
+        // Redirect straight to payment page
+        return redirect()->route('tasks.pay', $task)
+            ->with('success', 'Penawaran dari ' . $bid->mitra->name . ' diterima! Selesaikan pembayaran untuk memulai tugas.');
+    }
+
+    public function reject(TaskBid $bid)
+    {
+        $task = $bid->task;
+        
+        if (Auth::id() !== $task->user_id) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            abort(403);
+        }
+
+        $bid->update(['status' => 'rejected']);
+
+        $hasPendingBids = $task->bids()->where('status', 'pending')->exists();
+        if (!$hasPendingBids) {
+            $task->update(['status' => 'waiting_for_bid']);
+        }
+
+        // Log Activity
+        \App\Models\ActivityLog::log('Bid Rejection', "Menolak penawaran dari Mitra {$bid->mitra->name} untuk tugas '{$task->title}'");
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('tasks.show', $task)->with('success', 'Penawaran ditolak!');
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,14 +17,11 @@
 
     <!-- Inline theme script -->
     <script>
-        if (localStorage.getItem('mtm-theme') === 'dark' || (!('mtm-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('mtm-theme', 'dark');
     </script>
 </head>
-<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden">
+<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden bg-batik-udang">
     <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-red-50/30 to-white dark:from-mtm-dark dark:via-red-950/10 dark:to-mtm-dark py-12 px-4 relative">
         <!-- Background Decoration -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">

@@ -21,7 +21,7 @@ class ReviewController extends Controller
             return redirect()->route('tasks.show', $task)->with('error', 'Ulasan hanya dapat diberikan setelah tugas selesai dikerjakan.');
         }
 
-        if (!$task->payment || $task->payment->status !== 'completed') {
+        if (!$task->is_quick_help && (!$task->payment || $task->payment->status !== 'completed')) {
             return redirect()->route('tasks.show', $task)->with('error', 'Silakan selesaikan pembayaran terlebih dahulu sebelum memberikan ulasan.');
         }
 

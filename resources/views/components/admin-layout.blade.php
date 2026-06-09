@@ -24,7 +24,7 @@
         }
     </script>
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 min-h-screen flex">
+<body class="font-sans antialiased bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 min-h-screen flex" x-data="adminNotifier()">
 
     <!-- Sidebar -->
     <aside class="w-64 bg-white dark:bg-mtm-dark-surface border-r border-gray-200 dark:border-white/5 flex flex-col fixed inset-y-0 left-0 z-30">
@@ -111,11 +111,14 @@
             <div class="space-y-1">
                 <span class="px-4 text-[9px] font-black uppercase tracking-wider text-gray-400 block mb-1">Transaksi & Ulasan</span>
                 <a href="{{ route('admin.payments.index') }}" 
-                   class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.payments.*') ? 'bg-mtm-red/10 text-mtm-red font-extrabold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-950 dark:hover:text-white' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                    Histori Transaksi
+                   class="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.payments.*') ? 'bg-mtm-red/10 text-mtm-red font-extrabold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-950 dark:hover:text-white' }}">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Histori Transaksi
+                    </div>
+                    <span x-show="pendingCount > 0" x-text="pendingCount" x-cloak class="bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black animate-pulse"></span>
                 </a>
                 <a href="{{ route('admin.reviews.index') }}" 
                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.reviews.*') ? 'bg-mtm-red/10 text-mtm-red font-extrabold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-950 dark:hover:text-white' }}">
@@ -132,7 +135,7 @@
                 <a href="{{ route('admin.chat-rooms.index') }}" 
                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.chat-rooms.*') ? 'bg-mtm-red/10 text-mtm-red font-extrabold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-950 dark:hover:text-white' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                     </svg>
                     Ruang Obrolan
                 </a>
@@ -204,5 +207,40 @@
         </main>
     </div>
 
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('adminNotifier', () => ({
+                pendingCount: 0,
+                // Using a free notification sound from mixkit
+                audio: new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'),
+                init() {
+                    this.checkPendingPayments();
+                    setInterval(() => {
+                        this.checkPendingPayments();
+                    }, 10000); // Poll every 10 seconds
+                },
+                checkPendingPayments() {
+                    fetch('{{ route('admin.payments.check-pending') }}')
+                        .then(res => res.json())
+                        .then(data => {
+                            // If the count has increased, play the notification ringtone!
+                            if (data.pending_count > this.pendingCount && this.pendingCount !== 0) {
+                                this.audio.play().catch(e => console.log('Autoplay prevented', e));
+                                
+                                // Optional visual alert or reload logic if we're on the payments page
+                                if (window.location.pathname.includes('/admin/payments')) {
+                                    // Give user a hint
+                                }
+                            } else if (data.pending_count > 0 && this.pendingCount === 0) {
+                                // If first load and there are pending payments, just set it, don't ring 
+                                // (avoids ringing every time they navigate pages)
+                            }
+                            this.pendingCount = data.pending_count;
+                        })
+                        .catch(err => console.error('Error polling pending payments:', err));
+                }
+            }));
+        });
+    </script>
 </body>
 </html>

@@ -205,6 +205,10 @@ class ProfileController extends Controller
         $user = $request->user();
         $profile = $user->mitraProfile;
 
+        if ($user->role !== 'mitra') {
+            return redirect()->back()->with('error', 'Anda harus beralih ke Mode Mitra terlebih dahulu untuk mengedit profil Mitra.');
+        }
+
         if (!$profile) {
             return redirect()->back()->with('error', 'Profil Mitra tidak ditemukan.');
         }
@@ -214,7 +218,6 @@ class ProfileController extends Controller
             'skills' => ['required', 'array', 'min:1'],
             'skills.*' => ['string'],
             'service_area' => ['nullable', 'string', 'max:255'],
-            'service_radius' => ['nullable', 'integer', 'min:1'],
             'operational_hours' => ['nullable', 'string', 'max:255'],
             'portfolio_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg|max:2048'],
         ]);
@@ -231,12 +234,15 @@ class ProfileController extends Controller
             'bio' => $request->bio,
             'skills' => $request->skills,
             'service_area' => $request->service_area,
-            'service_radius' => $request->service_radius,
             'operational_hours' => $request->operational_hours,
             'portfolio_images' => $portfolio,
         ]);
 
         \App\Models\ActivityLog::log('Mitra Profile Update', "Memperbarui info profil mitra");
+
+        if ($user->role === 'mitra') {
+            return redirect()->route('mitra.dashboard')->with('success', 'Profil Mitra berhasil diperbarui!');
+        }
 
         return redirect()->route('profile.edit')->with('success', 'Profil Mitra berhasil diperbarui!');
     }

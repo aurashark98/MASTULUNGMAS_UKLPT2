@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,11 +22,9 @@
     
     <!-- Inline theme script to prevent flash -->
     <script>
-        if (localStorage.getItem('mtm-theme') === 'dark' || (!('mtm-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        // Force dark mode always
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('mtm-theme', 'dark');
 
         // Handle navigation flag for loading screen
         window.addEventListener('load', () => {
@@ -41,14 +39,12 @@
         });
     </script>
 </head>
-<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden">
+<body class="font-sans antialiased bg-background text-foreground overflow-x-hidden bg-batik-udang">
     <!-- Premium Loading Screen -->
     <x-loading-screen />
 
     <div class="min-h-screen">
-        @if(!Auth::check() || Auth::user()->role !== 'mitra')
-            <x-navbar />
-        @endif
+        <x-navbar />
 
         <!-- Page Content -->
         <main class="{{ Auth::check() && Auth::user()->role === 'mitra' ? 'pt-8 pb-12' : 'pt-24 pb-12' }}">

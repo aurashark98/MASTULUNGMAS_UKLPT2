@@ -1,14 +1,19 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Tugas') }}
-        </h2>
-    </x-slot>
+    <!-- Dot Grid Background -->
+    <div class="fixed inset-0 dot-grid opacity-[0.3] pointer-events-none z-0"></div>
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-mtm-dark-surface overflow-hidden shadow-xl sm:rounded-3xl p-8">
-                <form action="{{ route('tasks.update', $task) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto relative z-10 space-y-8 animate-fade-in">
+        <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4">
+            <h1 class="text-3xl font-black heading-gradient">
+                {{ __('Edit Tugas') }}
+            </h1>
+            <a href="{{ route('tasks.show', $task) }}" class="px-4 py-2 border border-gray-200 dark:border-white/10 text-gray-550 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 text-xs font-bold rounded-full transition-all">
+                Batal
+            </a>
+        </div>
+
+        <div class="bg-white dark:bg-mtm-dark-surface overflow-hidden shadow-xl rounded-[2.5rem] p-8 md:p-10 border border-gray-150 dark:border-white/5">
+            <form action="{{ route('tasks.update', $task) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     @method('PATCH')
 
@@ -35,50 +40,41 @@
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <x-input-label for="distance" :value="__('Estimasi Jarak Tempuh (Km)')" />
-                            <x-text-input id="distance" name="distance" type="number" step="0.1" min="0" class="mt-1 block w-full text-gray-900 dark:text-gray-100 bg-gray-150 dark:bg-white/5 font-bold cursor-not-allowed" value="{{ $task->distance }}" required readonly />
-                            <x-input-error :messages="$errors->get('distance')" class="mt-2" />
-                            <p id="hint-distance" class="text-[10px] text-gray-500 mt-1">Dihitung otomatis dari peta (Rp 3.000 / Km)</p>
-                        </div>
-                        <div>
-                            <x-input-label for="duration" :value="__('Estimasi Durasi Kerja (Jam)')" />
-                            <x-text-input id="duration" name="duration" type="number" min="1" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="{{ $task->duration }}" required oninput="updatePrice()" />
-                            <x-input-error :messages="$errors->get('duration')" class="mt-2" />
-                            <p id="hint-duration" class="text-[10px] text-gray-500 mt-1">Biaya per Jam: Rp 10.000</p>
-                        </div>
+                    <!-- Jarak Tempuh (Hidden, dikalkulasi otomatis dari peta) -->
+                    <input type="hidden" id="distance" name="distance" value="{{ old('distance', $task->distance) }}">
+
+                    <div>
+                        <x-input-label for="duration" :value="__('Estimasi Durasi Kerja (Jam)')" />
+                        <x-text-input id="duration" name="duration" type="number" min="1" class="mt-1 block w-full text-gray-900 dark:text-gray-100" value="{{ old('duration', $task->duration) }}" required oninput="updatePrice()" />
+                        <x-input-error :messages="$errors->get('duration')" class="mt-2" />
+                        <p id="hint-duration" class="text-[10px] text-gray-500 mt-1">Biaya per Jam: Rp 10.000</p>
                     </div>
 
                     <!-- Premium Price Breakdown Box -->
-                    <div class="bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Rincian Estimasi Harga Layanan (Kalkulator MTM)</h4>
-                            <span id="lbl-surge-badge" class="hidden text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse"></span>
+                    <div id="price-breakdown-box" class="bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-800 rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <x-input-label for="budget" :value="__('Harga Tawaran Anda (Rp) *')" class="text-base font-bold text-gray-800 dark:text-gray-100" />
+                                <span id="lbl-surge-badge" class="hidden text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse"></span>
+                            </div>
+                            <span class="text-xs text-gray-500">Estimasi Sistem: <strong id="lbl-total-price" class="text-mtm-red">Rp 0</strong></span>
                         </div>
-                        <!-- Info tarif aktif per kategori -->
-                        <div id="category-tariff-info" class="hidden bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-4 py-2.5">
-                            <p class="text-[11px] font-bold text-blue-700 dark:text-blue-300" id="lbl-category-tariff"></p>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-                            <span>Tarif Dasar Kategori:</span>
-                            <span id="lbl-base-price" class="font-semibold">Rp 15.000</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-                            <span>Biaya Jarak Tempuh:</span>
-                            <span id="lbl-distance-fee" class="font-semibold">Rp 0</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-                            <span>Biaya Durasi Pengerjaan:</span>
-                            <span id="lbl-duration-fee" class="font-semibold">Rp 10.000</span>
-                        </div>
-                        <div id="surge-row" class="hidden flex justify-between text-sm text-orange-500 dark:text-orange-400">
-                            <span id="lbl-surge-label">Biaya Jam Sibuk:</span>
-                            <span id="lbl-surge-fee" class="font-bold">Rp 0</span>
-                        </div>
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between items-center">
-                            <span class="text-base font-bold text-gray-800 dark:text-gray-100">Total Biaya Tugas:</span>
-                            <span id="lbl-total-price" class="text-2xl font-black text-mtm-red">Rp 25.000</span>
+                            <div class="flex items-center gap-3 mt-2">
+                                <button type="button" onclick="adjustBudget(-1000)" class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 rounded-xl hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                                </button>
+                                
+                                <div class="relative flex-1">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xl">Rp</span>
+                                    <x-text-input id="budget" name="budget" type="number" step="1000" value="{{ intval($task->budget) }}" class="block w-full pl-12 pr-4 py-3 text-center text-xl font-black text-mtm-red bg-white dark:bg-black/20 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-mtm-red [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" required oninput="this.dataset.userEdited = 'true'" />
+                                </div>
+
+                                <button type="button" onclick="adjustBudget(1000)" class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-mtm-red/10 text-mtm-red rounded-xl hover:bg-mtm-red/20 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                </button>
+                            </div>
+                            <p id="hint-budget" class="text-[10px] text-gray-500 mt-1">Anda bisa menaikkan harga untuk menarik Mitra, atau menurunkan harga maksimal 20% (Minimal: Rp <span id="lbl-min-budget">0</span>).</p>
+                            <x-input-error :messages="$errors->get('budget')" class="mt-2" />
                         </div>
                     </div>
 
@@ -89,6 +85,8 @@
                             <div class="flex flex-col sm:flex-row gap-2 mt-1">
                                 <div class="relative flex-1">
                                     <x-text-input id="location" name="location" type="text" class="block w-full text-gray-900 dark:text-gray-100" value="{{ $task->location }}" required />
+                                    <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $task->latitude) }}">
+                                    <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $task->longitude) }}">
                                 </div>
                                 <div class="flex gap-2 shrink-0">
                                     <button type="button" id="btn-search-origin" class="px-5 py-3 bg-gray-150 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold border border-gray-300 dark:border-gray-700 transition-all cursor-pointer">
@@ -162,7 +160,6 @@
                 </form>
             </div>
         </div>
-    </div>
 
 <script>// === MTM Category Pricing Table ===
 const MTM_CATEGORY_PRICING = {
@@ -186,67 +183,117 @@ function getSurgePricing() {
     return { multiplier: 1.0, label: null, badgeClass: '', badge: null };
 }
 
+window.adjustBudget = function(amount) {
+    const budgetInput = document.getElementById('budget');
+    if (!budgetInput) return;
+    
+    let currentVal = parseInt(budgetInput.value) || 0;
+    let minBudget = parseInt(budgetInput.min) || 0;
+    
+    let newVal = currentVal + amount;
+    if (newVal < minBudget) {
+        newVal = minBudget; // Prevent lowering below min
+    }
+    
+    budgetInput.value = newVal;
+    budgetInput.dataset.userEdited = 'true';
+}
+
 window.updatePrice = function() {
     const categorySelect = document.getElementById('category_id');
     const distanceInput  = document.getElementById('distance');
     const durationInput  = document.getElementById('duration');
+    const breakdownBox   = document.getElementById('price-breakdown-box');
+    
     if (!categorySelect || !distanceInput || !durationInput) return;
+
+    if (!categorySelect.value) {
+        if (breakdownBox) breakdownBox.classList.add('hidden');
+        return;
+    }
+    if (breakdownBox) breakdownBox.classList.remove('hidden');
     
     const selectedOption = categorySelect.options[categorySelect.selectedIndex];
     const slug    = selectedOption ? (selectedOption.getAttribute('data-slug') || '') : '';
     const pricing = MTM_CATEGORY_PRICING[slug] || MTM_DEFAULT_PRICING;
     
-    const distance    = parseFloat(distanceInput.value) || 0;
-    const duration    = parseInt(durationInput.value) || 1;
+    const distance    = Math.max(0, parseFloat(distanceInput.value) || 0);
+    const surge       = getSurgePricing();
+
+    if (slug === 'kurir' || slug === 'angkut-barang') {
+        let speed = 30; // 30 km/h normal speed
+        if (surge.multiplier > 1.0) {
+            speed = 15; // 15 km/h during rush hour
+        }
+        let estimatedHours = (distance / speed) + 0.5; // +0.5 hour for pickup/dropoff overhead
+        let finalDuration = Math.ceil(estimatedHours);
+        if (finalDuration < 1) finalDuration = 1;
+        
+        durationInput.value = finalDuration;
+        durationInput.setAttribute('readonly', true);
+        durationInput.classList.add('bg-gray-150', 'dark:bg-white/5', 'cursor-not-allowed');
+    } else {
+        durationInput.removeAttribute('readonly');
+        durationInput.classList.remove('bg-gray-150', 'dark:bg-white/5', 'cursor-not-allowed');
+    }
+
+    let duration      = parseInt(durationInput.value) || 1;
+    if (duration < 1) {
+        duration = 1;
+        durationInput.value = 1;
+    }
     const baseFee     = pricing.base;
     const distanceFee = Math.round(distance * pricing.perKm);
     const durationFee = Math.round(duration * pricing.perJam);
     const subtotal    = baseFee + distanceFee + durationFee;
     
-    const surge    = getSurgePricing();
     const surgeFee = Math.round(subtotal * (surge.multiplier - 1));
     const total    = subtotal + surgeFee;
+    const minBudget = Math.floor(total * 0.8);
     
-    document.getElementById('lbl-base-price').innerText   = 'Rp ' + baseFee.toLocaleString('id-ID');
-    document.getElementById('lbl-distance-fee').innerText = 'Rp ' + distanceFee.toLocaleString('id-ID');
-    document.getElementById('lbl-duration-fee').innerText = 'Rp ' + durationFee.toLocaleString('id-ID');
-    document.getElementById('lbl-total-price').innerText  = 'Rp ' + total.toLocaleString('id-ID');
+    const lblTotalPrice = document.getElementById('lbl-total-price');
+    const lblMinBudget  = document.getElementById('lbl-min-budget');
+    if (lblTotalPrice) lblTotalPrice.innerText = 'Rp ' + total.toLocaleString('id-ID');
+    if (lblMinBudget) lblMinBudget.innerText = minBudget.toLocaleString('id-ID');
+
+    const budgetInput = document.getElementById('budget');
+    if (budgetInput) {
+        budgetInput.min = minBudget;
+        // Auto-fill budget if not edited by user yet, or if user's budget is now below the new minimum
+        if (!budgetInput.dataset.userEdited && !budgetInput.value) {
+            budgetInput.value = total;
+        } else if (parseInt(budgetInput.value) < minBudget) {
+            budgetInput.value = minBudget;
+        }
+    }
     
     const distHint = document.getElementById('hint-distance');
     const durHint  = document.getElementById('hint-duration');
     if (distHint) distHint.innerText = 'Dihitung otomatis dari peta (Rp ' + pricing.perKm.toLocaleString('id-ID') + ' / Km)';
-    if (durHint)  durHint.innerText  = 'Biaya per Jam: Rp ' + pricing.perJam.toLocaleString('id-ID');
-    
-    const tariffBox = document.getElementById('category-tariff-info');
-    const tariffLbl = document.getElementById('lbl-category-tariff');
-    if (slug && tariffBox && tariffLbl) {
-        tariffBox.classList.remove('hidden');
-        tariffLbl.innerText = pricing.icon + ' Tarif ' + pricing.label + ': Base Rp ' + pricing.base.toLocaleString('id-ID') + ' + Rp ' + pricing.perKm.toLocaleString('id-ID') + '/Km + Rp ' + pricing.perJam.toLocaleString('id-ID') + '/Jam';
-    } else if (tariffBox) {
-        tariffBox.classList.add('hidden');
+    if (durHint) {
+        if (slug === 'kurir' || slug === 'angkut-barang') {
+            let speed = (surge.multiplier > 1.0) ? 15 : 30;
+            durHint.innerText = `Otomatis berdasar jarak (${speed} km/j). Biaya per Jam: Rp ` + pricing.perJam.toLocaleString('id-ID');
+        } else {
+            durHint.innerText = 'Biaya per Jam: Rp ' + pricing.perJam.toLocaleString('id-ID');
+        }
     }
-    
-    const surgeRow     = document.getElementById('surge-row');
     const surgeBadge   = document.getElementById('lbl-surge-badge');
-    const surgeLabelEl = document.getElementById('lbl-surge-label');
-    const surgeFeeEl   = document.getElementById('lbl-surge-fee');
-    if (surge.multiplier > 1) {
-        surgeRow.classList.remove('hidden'); surgeRow.classList.add('flex');
-        surgeLabelEl.innerText = 'Biaya ' + surge.label + ':';
-        surgeFeeEl.innerText   = 'Rp ' + surgeFee.toLocaleString('id-ID');
-        surgeBadge.classList.remove('hidden');
-        surgeBadge.className = 'text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse ' + surge.badgeClass;
-        surgeBadge.innerText = surge.badge;
-    } else {
-        surgeRow.classList.add('hidden'); surgeRow.classList.remove('flex');
-        surgeBadge.classList.add('hidden');
+    if (surgeBadge) {
+        if (surge.multiplier > 1.0) {
+            surgeBadge.innerText = surge.badge;
+            surgeBadge.className = 'text-[10px] font-black px-2.5 py-1 rounded-full animate-pulse ' + surge.badgeClass;
+            surgeBadge.classList.remove('hidden');
+        } else {
+            surgeBadge.classList.add('hidden');
+        }
     }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Default location (Jakarta)
-    var defaultLat = -6.2088;
-    var defaultLng = 106.8456;
+    // Default location (existing task coords or Jakarta)
+    var defaultLat = {{ $task->latitude ?? -6.2088 }};
+    var defaultLng = {{ $task->longitude ?? 106.8456 }};
     
     // Initialize Leaflet Map
     var map = L.map('map', {
@@ -316,6 +363,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (markerOrigin && markerDestination) {
             var originLatLng = markerOrigin.getLatLng();
             var destLatLng = markerDestination.getLatLng();
+            
+            // Update coordinates for origin search
+            document.getElementById('latitude').value = originLatLng.lat;
+            document.getElementById('longitude').value = originLatLng.lng;
+            
             var distanceInMeters = originLatLng.distanceTo(destLatLng);
             var distanceInKm = distanceInMeters / 1000;
             document.getElementById('distance').value = distanceInKm.toFixed(1);
@@ -452,6 +504,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calculateDistance();
     updatePrice();
+
+    // Auto-geocode on form submit if coordinates are not yet set
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var lat = document.getElementById('latitude').value;
+        if (!lat) {
+            e.preventDefault(); // Stop form submission
+            var query = document.getElementById('location').value;
+            if (query) {
+                mapLoading.classList.remove('hidden');
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=id`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            document.getElementById('latitude').value = data[0].lat;
+                            document.getElementById('longitude').value = data[0].lon;
+                        }
+                        e.target.submit();
+                    })
+                    .catch(error => {
+                        console.error('Error auto-geocoding on submit:', error);
+                        e.target.submit();
+                    });
+            } else {
+                e.target.submit();
+            }
+        }
+    });
 
     // Periodically invalidate map size to solve partial rendering/gray box bugs caused by parent transition animations
     var invalidateInterval = setInterval(function() {

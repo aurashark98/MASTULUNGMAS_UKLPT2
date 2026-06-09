@@ -14,15 +14,21 @@ class Task extends Model
         'budget',
         'location',
         'destination_location',
+        'latitude',
+        'longitude',
         'distance',
         'duration',
         'images',
         'status',
+        'is_quick_help',
     ];
 
     protected $casts = [
         'images' => 'array',
         'budget' => 'decimal:2',
+        'latitude' => 'float',
+        'longitude' => 'float',
+        'is_quick_help' => 'boolean',
     ];
 
     public function user()

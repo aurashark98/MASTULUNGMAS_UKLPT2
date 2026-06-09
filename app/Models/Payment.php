@@ -13,6 +13,8 @@ class Payment extends Model
         'payment_method',
         'status',
         'transaction_id',
+        'proof_path',
+        'verified_at',
     ];
 
     protected $casts = [

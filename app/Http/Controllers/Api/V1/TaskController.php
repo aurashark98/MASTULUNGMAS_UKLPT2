@@ -110,14 +110,23 @@ class TaskController extends Controller
             'description'          => 'required|string',
             'location'             => 'required|string',
             'destination_location' => 'nullable|string',
-            'distance'             => 'required|numeric|min:0',
             'duration'             => 'required|integer|min:1',
             'images.*'             => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'budget'               => 'required|numeric',
         ]);
 
         $category = ServiceCategory::find($request->category_id);
         $slug     = $category ? $category->slug : 'default';
-        $budget   = $this->calculateBudget($slug, floatval($request->distance), intval($request->duration));
+        $calculatedBudget   = $this->calculateBudget($slug, floatval($request->distance), intval($request->duration));
+
+        $minBudget = floor($calculatedBudget * 0.8);
+        $request->validate([
+            'budget' => 'min:' . $minBudget
+        ], [
+            'budget.min' => 'Harga penawaran tidak boleh lebih rendah dari 80% harga sistem (Minimal Rp ' . number_format($minBudget, 0, ',', '.') . ')'
+        ]);
+
+        $finalBudget = $request->budget >= $minBudget ? $request->budget : $calculatedBudget;
 
         $images = [];
         if ($request->hasFile('images')) {
@@ -131,7 +140,7 @@ class TaskController extends Controller
             'category_id'          => $request->category_id,
             'title'                => $request->title,
             'description'          => $request->description,
-            'budget'               => $budget,
+            'budget'               => $finalBudget,
             'location'             => $request->location,
             'destination_location' => $request->destination_location,
             'distance'             => floatval($request->distance),
@@ -181,17 +190,27 @@ class TaskController extends Controller
             'destination_location' => 'nullable|string',
             'distance'             => 'required|numeric|min:0',
             'duration'             => 'required|integer|min:1',
+            'budget'               => 'required|numeric',
         ]);
 
         $category = ServiceCategory::find($request->category_id);
         $slug     = $category ? $category->slug : 'default';
-        $budget   = $this->calculateBudget($slug, floatval($request->distance), intval($request->duration));
+        $calculatedBudget   = $this->calculateBudget($slug, floatval($request->distance), intval($request->duration));
+
+        $minBudget = floor($calculatedBudget * 0.8);
+        $request->validate([
+            'budget' => 'min:' . $minBudget
+        ], [
+            'budget.min' => 'Harga penawaran tidak boleh lebih rendah dari 80% harga sistem (Minimal Rp ' . number_format($minBudget, 0, ',', '.') . ')'
+        ]);
+
+        $finalBudget = $request->budget >= $minBudget ? $request->budget : $calculatedBudget;
 
         $task->update([
             'category_id'          => $request->category_id,
             'title'                => $request->title,
             'description'          => $request->description,
-            'budget'               => $budget,
+            'budget'               => $finalBudget,
             'location'             => $request->location,
             'destination_location' => $request->destination_location,
             'distance'             => floatval($request->distance),

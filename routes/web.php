@@ -50,6 +50,12 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::patch('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [App\Http\Controllers\TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/bids/{bid}/accept', [App\Http\Controllers\BidController::class, 'accept'])->name('bids.accept');
+
+    // Quick Help (Bantuan Cepat)
+    Route::get('/quick-help/check-quota', [App\Http\Controllers\QuickHelpController::class, 'checkQuota'])->name('quick-help.check-quota');
+    Route::post('/quick-help', [App\Http\Controllers\QuickHelpController::class, 'store'])->name('quick-help.store');
+    Route::get('/quick-help/{task}/status', [App\Http\Controllers\QuickHelpController::class, 'checkStatus'])->name('quick-help.status');
+    Route::post('/quick-help/{task}/cancel', [App\Http\Controllers\QuickHelpController::class, 'cancel'])->name('quick-help.cancel');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -61,9 +67,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified', 'role:mitra'])->prefix('mitra')->name('mitra.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Mitra\DashboardController::class, 'index'])->name('dashboard');
     Route::post('/toggle-status', [App\Http\Controllers\Mitra\DashboardController::class, 'toggleStatus'])->name('toggle-status');
+    Route::post('/update-location', [App\Http\Controllers\Mitra\DashboardController::class, 'updateLocation'])->name('update-location');
+    Route::get('/check-incoming-tasks', [App\Http\Controllers\Mitra\DashboardController::class, 'checkIncomingTasks'])->name('check-incoming-tasks');
     Route::post('/tasks/{task}/bid', [App\Http\Controllers\BidController::class, 'store'])->name('tasks.bid');
     Route::post('/tasks/{task}/start', [App\Http\Controllers\Mitra\DashboardController::class, 'startTask'])->name('tasks.start');
     Route::post('/tasks/{task}/complete', [App\Http\Controllers\Mitra\DashboardController::class, 'completeTask'])->name('tasks.complete');
+    Route::post('/quick-help/{task}/accept', [App\Http\Controllers\Mitra\DashboardController::class, 'acceptQuickHelp'])->name('quick-help.accept');
 
     // Portfolio
     Route::get('/portfolios', [App\Http\Controllers\Mitra\PartnerPortfolioController::class, 'index'])->name('portfolios.index');
@@ -90,6 +99,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::resource('tasks', App\Http\Controllers\Admin\TaskController::class);
     Route::resource('task-bids', App\Http\Controllers\Admin\TaskBidController::class);
     Route::resource('task-assignments', App\Http\Controllers\Admin\TaskAssignmentController::class);
+    Route::get('/payments/check-pending', [App\Http\Controllers\Admin\PaymentController::class, 'checkPending'])->name('payments.check-pending');
+    Route::post('/payments/{payment}/verify', [App\Http\Controllers\Admin\PaymentController::class, 'verify'])->name('payments.verify');
     Route::resource('payments', App\Http\Controllers\Admin\PaymentController::class);
     Route::resource('reviews', App\Http\Controllers\Admin\ReviewController::class);
     Route::resource('chat-rooms', App\Http\Controllers\Admin\ChatRoomController::class);
@@ -121,6 +132,12 @@ Route::middleware('auth')->group(function () {
 
     // Review Routes
     Route::post('/tasks/{task}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('tasks.review.store');
+
+    // Reject Bid Route
+    Route::post('/bids/{bid}/reject', [App\Http\Controllers\BidController::class, 'reject'])->name('bids.reject');
+
+    // Poll bids for a specific task
+    Route::get('/tasks/{task}/bids-data', [App\Http\Controllers\TaskController::class, 'getBidsData'])->name('tasks.bids-data');
 
     // Notification Routes
     Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
