@@ -47,24 +47,6 @@
 
             <!-- Action Controls & Status Switcher -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
-                <!-- Driver Status Switcher -->
-                <div class="bg-gray-100/50 dark:bg-black/20 p-4 rounded-3xl border border-gray-200/50 dark:border-white/5 flex items-center justify-between gap-6 flex-1 sm:flex-initial">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Status Bekerja</p>
-                        <p class="text-sm font-bold mt-0.5 {{ $profile->is_online ? 'text-green-500' : 'text-gray-500' }}">
-                            {{ $profile->is_online ? 'Siap Menerima Kerja' : 'Istirahat / Off' }}
-                        </p>
-                    </div>
-                    <form method="POST" action="{{ route('mitra.toggle-status') }}">
-                        @csrf
-                        <button type="submit" 
-                                class="relative inline-flex h-9 w-16 items-center rounded-full transition-all duration-300 focus:outline-none {{ $profile->is_online ? 'bg-green-500 shadow-md shadow-green-500/25' : 'bg-gray-300 dark:bg-gray-800' }}">
-                            <span class="sr-only">Toggle Status</span>
-                            <span class="inline-block h-6 w-6 transform rounded-full bg-white transition-all duration-300 {{ $profile->is_online ? 'translate-x-9' : 'translate-x-1' }}"></span>
-                        </button>
-                    </form>
-                </div>
-
                 <!-- Quick Actions (Edit Profil) -->
                 <div class="flex flex-row flex-wrap gap-3 justify-center">
                     <!-- Edit Profil Button -->
