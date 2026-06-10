@@ -312,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Leaflet Map
     var map = L.map('map', {
         zoomControl: true,
-        scrollWheelZoom: true
+        scrollWheelZoom: true,
+        attributionControl: false
     }).setView([defaultLat, defaultLng], 13);
     
     // OpenStreetMap Tiles (using a sleek dark mode tile if in dark mode, or standard tile)

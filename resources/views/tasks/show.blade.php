@@ -553,7 +553,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var map = L.map('detail-map', {
         zoomControl: true,
-        scrollWheelZoom: false
+        scrollWheelZoom: false,
+        attributionControl: false
     }).setView([defaultLat, defaultLng], 13);
     
     var isDark = document.documentElement.classList.contains('dark');
